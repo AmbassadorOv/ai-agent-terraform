@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julius Oracle | 3D Visualization</title>
+    <!-- Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Tailwind for HUD -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #050505; color: #fff; font-family: 'Courier New', Courier, monospace; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+        /* HUD Layers */
+        .hud-layer { position: absolute; z-index: 10; pointer-events: none; }
+        .interactive { pointer-events: auto; }
+
+        /* Scanlines Effect */
+        .scanlines {
+            position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+            pointer-events: none; z-index: 20; opacity: 0.3;
+        }
+
+        /* Animations */
+        @keyframes flash { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .flash-text { animation: flash 2s infinite; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+    <div class="scanlines"></div>
+
+    <!-- HUD: Top Header -->
+    <div class="hud-layer w-full p-4 flex justify-between items-start">
+        <div class="bg-black/80 border border-purple-500/50 p-3 rounded backdrop-blur-sm">
+            <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+                JULIUS ORACLE
+            </h1>
+            <div class="text-xs text-blue-300 mt-1">
+                <i class="fa-solid fa-circle-nodes mr-1"></i> TOPOLOGY: 25-5-1
+                <span class="mx-2">|</span>
+                <i class="fa-solid fa-microchip mr-1"></i> KERNEL: ACTIVE
+            </div>
+        </div>
+
+        <div class="bg-black/80 border border-green-500/50 p-3 rounded backdrop-blur-sm text-right">
+            <div class="text-xs text-gray-400">SYSTEM STATUS</div>
+            <div class="text-lg font-bold text-green-400 flash-text">OPERATIONAL</div>
+            <div class="text-xs text-green-600 mt-1" id="fps-counter">60 FPS</div>
+        </div>
+    </div>
+
+    <!-- HUD: Left Log Panel -->
+    <div class="hud-layer top-24 left-4 w-80 h-96 flex flex-col pointer-events-auto">
+        <div class="bg-black/80 border border-slate-700 p-2 rounded-t flex justify-between items-center">
+            <span class="text-xs font-bold text-slate-300">AEI CYCLE LOG</span>
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+        </div>
+        <div id="log-container" class="bg-black/50 border-x border-b border-slate-700 p-3 overflow-y-auto flex-1 font-mono text-xs space-y-2 backdrop-blur-sm">
+            <div class="text-slate-500">[SYSTEM] Initializing 3D Context...</div>
+        </div>
+    </div>
+
+    <!-- HUD: Bottom Control Bar -->
+    <div class="hud-layer bottom-4 left-1/2 transform -translate-x-1/2 bg-black/80 border border-slate-600 rounded-full px-6 py-2 pointer-events-auto backdrop-blur flex gap-4">
+        <button onclick="resetCamera()" class="text-slate-300 hover:text-white transition"><i class="fa-solid fa-camera"></i> Reset View</button>
+        <div class="w-px bg-slate-600"></div>
+        <button onclick="triggerVerification()" class="text-emerald-400 hover:text-emerald-200 transition"><i class="fa-solid fa-bolt"></i> Inject Task</button>
+        <button onclick="toggleRotation()" class="text-blue-400 hover:text-blue-200 transition"><i class="fa-solid fa-sync"></i> <span id="rot-btn">Pause Rotation</span></button>
+    </div>
+
+    <!-- HUD: Right Detail Panel (Hidden by default) -->
+    <div id="detail-panel" class="hud-layer top-24 right-4 w-64 bg-black/90 border border-blue-500/50 p-4 rounded transform translate-x-full transition-transform duration-300 pointer-events-auto">
+        <h3 class="text-blue-400 font-bold border-b border-blue-900 pb-2 mb-2" id="detail-title">NODE INFO</h3>
+        <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+                <span class="text-gray-500">ID:</span>
+                <span class="text-white font-mono" id="detail-id">--</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-500">Role:</span>
+                <span class="text-white" id="detail-role">--</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-500">Status:</span>
+                <span class="text-green-400" id="detail-status">Active</span>
+            </div>
+            <div class="mt-4">
+                <div class="text-gray-500 text-xs mb-1">PROCESS LOAD</div>
+                <div class="w-full bg-gray-800 h-2 rounded overflow-hidden">
+                    <div id="detail-load" class="bg-blue-500 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+            <div class="mt-4 p-2 bg-slate-900 rounded text-xs text-gray-300 font-mono" id="detail-desc">
+                Waiting for selection...
+            </div>
+        </div>
+        <button onclick="closeDetails()" class="mt-4 w-full bg-slate-800 hover:bg-slate-700 text-xs py-1 rounded">CLOSE</button>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        const config = {
+            colors: {
+                central: 0x8b5cf6, // Violet
+                core: 0x3b82f6,    // Blue
+                leaf: 0x10b981,    // Emerald
+                line: 0x1e293b,    // Slate 800
+                packet: 0xfacc15   // Yellow
+            }
+        };
+
+        // --- Global Variables ---
+        let scene, camera, renderer, controls;
+        let nodes = [];
+        let connections = [];
+        let packets = [];
+        let raycaster, mouse;
+        let isRotating = true;
+        let animationId;
+
+        // --- Data Structure ---
+        const structure = {
+            central: { id: 'Central_Commodore', role: 'Central', x: 0, y: 15, z: 0 },
+            cores: [],
+            leaves: []
+        };
+
+        // Initialize positions
+        for (let i = 0; i < 5; i++) {
+            const angle = (i / 5) * Math.PI * 2;
+            const coreR = 12;
+            const coreX = Math.cos(angle) * coreR;
+            const coreZ = Math.sin(angle) * coreR;
+            const coreId = `Admiral_${i+1}`;
+
+            structure.cores.push({
+                id: coreId,
+                role: 'Core',
+                parentId: 'Central_Commodore',
+                x: coreX, y: 0, z: coreZ,
+                group: i
+            });
+
+            // 5 Leaves per Core
+            for (let j = 0; j < 5; j++) {
+                // Offset leaves slightly around the core
+                const leafAngle = angle + ((j - 2) * 0.3);
+                const leafR = coreR + 6;
+                const leafX = Math.cos(leafAngle) * leafR;
+                const leafZ = Math.sin(leafAngle) * leafR;
+
+                structure.leaves.push({
+                    id: `Leaf_G${i+1}_A${j+1}`,
+                    role: 'Leaf',
+                    parentId: coreId,
+                    x: leafX, y: -10, z: leafZ,
+                    group: i
+                });
+            }
+        }
+
+        // --- Initialization ---
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050505, 0.015);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(30, 20, 40);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxDistance = 80;
+            controls.minDistance = 10;
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xffffff, 1);
+            pointLight.position.set(0, 20, 0);
+            scene.add(pointLight);
+
+            // Objects
+            createArchitecture();
+            createParticles();
+
+            // Interaction
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('click', onMouseClick);
+
+            // Start Loop
+            log("System Online. Visualization Initialized.", "SYSTEM");
+            animate();
+        }
+
+        function createArchitecture() {
+            // Materials
+            const matCentral = new THREE.MeshPhongMaterial({ color: config.colors.central, emissive: 0x4c1d95, emissiveIntensity: 0.5, transparent: true, opacity: 0.9 });
+            const matCore = new THREE.MeshPhongMaterial({ color: config.colors.core, emissive: 0x1e3a8a, emissiveIntensity: 0.4 });
+            const matLeaf = new THREE.MeshPhongMaterial({ color: config.colors.leaf, emissive: 0x064e3b, emissiveIntensity: 0.3 });
+            const lineMat = new THREE.LineBasicMaterial({ color: config.colors.line, transparent: true, opacity: 0.3 });
+
+            // 1. Central Node
+            const centralGeo = new THREE.IcosahedronGeometry(3, 1); // Looks techy
+            const centralMesh = new THREE.Mesh(centralGeo, matCentral);
+            centralMesh.position.set(structure.central.x, structure.central.y, structure.central.z);
+            centralMesh.userData = structure.central;
+            scene.add(centralMesh);
+            nodes.push(centralMesh);
+            addGlow(centralMesh, config.colors.central);
+
+            // 2. Cores & Lines to Central
+            structure.cores.forEach(core => {
+                const geo = new THREE.OctahedronGeometry(1.5);
+                const mesh = new THREE.Mesh(geo, matCore.clone());
+                mesh.position.set(core.x, core.y, core.z);
+                mesh.userData = core;
+                scene.add(mesh);
+                nodes.push(mesh);
+
+                // Line to Central
+                createConnection(mesh.position, centralMesh.position, lineMat);
+            });
+
+            // 3. Leaves & Lines to Cores
+            structure.leaves.forEach(leaf => {
+                const geo = new THREE.BoxGeometry(0.8, 0.8, 0.8);
+                const mesh = new THREE.Mesh(geo, matLeaf.clone());
+                mesh.position.set(leaf.x, leaf.y, leaf.z);
+                mesh.userData = leaf;
+                scene.add(mesh);
+                nodes.push(mesh);
+
+                // Find Parent Core position
+                const parentCore = nodes.find(n => n.userData.id === leaf.parentId);
+                if(parentCore) {
+                    createConnection(mesh.position, parentCore.position, lineMat);
+                }
+            });
+        }
+
+        function createConnection(start, end, material) {
+            const points = [];
+            points.push(start);
+            points.push(end);
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const line = new THREE.Line(geometry, material);
+            scene.add(line);
+            connections.push({ line, start, end }); // Store for packet pathing
+        }
+
+        function addGlow(mesh, color) {
+            // Simple fake glow using sprite
+            const spriteMaterial = new THREE.SpriteMaterial({
+                map: new THREE.TextureLoader().load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/sprites/spark1.png'),
+                color: color,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(10, 10, 1);
+            mesh.add(sprite);
+        }
+
+        function createParticles() {
+            // Background stars
+            const geom = new THREE.BufferGeometry();
+            const counts = 500;
+            const positions = new Float32Array(counts * 3);
+            for(let i=0; i<counts * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 150;
+            }
+            geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const mat = new THREE.PointsMaterial({ size: 0.5, color: 0x444444 });
+            const particles = new THREE.Points(geom, mat);
+            scene.add(particles);
+        }
+
+        // --- Simulation Logic ---
+
+        function triggerVerification() {
+            // Trigger animation of packets from random leaves
+            const leaves = nodes.filter(n => n.userData.role === 'Leaf');
+            // Pick 5 random leaves
+            for(let i=0; i<5; i++) {
+                const leaf = leaves[Math.floor(Math.random() * leaves.length)];
+                spawnPacket(leaf, 'up');
+
+                // Visual feedback
+                pulseNode(leaf);
+            }
+            log(`Batch Task Injected: ${Date.now().toString().slice(-6)}`, "ALPHA");
+        }
+
+        function spawnPacket(startNode, direction) {
+            // Create packet mesh
+            const geo = new THREE.SphereGeometry(0.3, 8, 8);
+            const mat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+            const packet = new THREE.Mesh(geo, mat);
+            packet.position.copy(startNode.position);
+            scene.add(packet);
+
+            // Determine target
+            let targetNode;
+            if (direction === 'up') {
+                if (startNode.userData.role === 'Leaf') {
+                    targetNode = nodes.find(n => n.userData.id === startNode.userData.parentId);
+                } else if (startNode.userData.role === 'Core') {
+                    targetNode = nodes.find(n => n.userData.id === startNode.userData.parentId);
+                }
+            }
+
+            if (!targetNode) {
+                scene.remove(packet);
+                return;
+            }
+
+            packets.push({
+                mesh: packet,
+                start: startNode.position.clone(),
+                end: targetNode.position.clone(),
+                progress: 0,
+                speed: 0.02 + (Math.random() * 0.01),
+                targetNode: targetNode
+            });
+        }
+
+        function updatePackets() {
+            for (let i = packets.length - 1; i >= 0; i--) {
+                const p = packets[i];
+                p.progress += p.speed;
+
+                // Lerp position
+                p.mesh.position.lerpVectors(p.start, p.end, p.progress);
+
+                if (p.progress >= 1) {
+                    // Arrived
+                    pulseNode(p.targetNode);
+                    scene.remove(p.mesh);
+                    packets.splice(i, 1);
+
+                    // Chain reaction logic
+                    if (p.targetNode.userData.role === 'Core') {
+                        // Core processes and sends to Central
+                        setTimeout(() => spawnPacket(p.targetNode, 'up'), 200);
+                        log(`${p.targetNode.userData.id} processing data block...`, "GAMMA");
+                    } else if (p.targetNode.userData.role === 'Central') {
+                        log("Central received synthesized logic.", "DELTA");
+                    }
+                }
+            }
+        }
+
+        function pulseNode(mesh) {
+            // Simple scale up/down animation logic would go here
+            // For now, we flash emissive color
+            const originalColor = mesh.material.emissive.getHex();
+            mesh.material.emissive.setHex(0xffffff);
+            setTimeout(() => {
+                if(mesh && mesh.material) mesh.material.emissive.setHex(originalColor);
+            }, 100);
+        }
+
+        // --- Interaction ---
+
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // Raycast for hover effect
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(nodes);
+
+            if (intersects.length > 0) {
+                document.body.style.cursor = 'pointer';
+            } else {
+                document.body.style.cursor = 'default';
+            }
+        }
+
+        function onMouseClick(event) {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(nodes);
+
+            if (intersects.length > 0) {
+                const node = intersects[0].object;
+                showDetails(node);
+
+                // Camera focus (smooth move)
+                // In a full app, we would tween the camera here
+            } else {
+                // Clicked void
+                closeDetails();
+            }
+        }
+
+        // --- UI Functions ---
+
+        function showDetails(mesh) {
+            const data = mesh.userData;
+            const panel = document.getElementById('detail-panel');
+            panel.classList.remove('translate-x-full');
+
+            document.getElementById('detail-id').innerText = data.id;
+            document.getElementById('detail-role').innerText = data.role;
+            document.getElementById('detail-load').style.width = Math.floor(Math.random() * 100) + '%';
+
+            let desc = "";
+            if(data.role === 'Leaf') desc = "Unit responsible for atomic fact verification and data retrieval. Operates on Alpha protocols.";
+            if(data.role === 'Core') desc = "Regional aggregator. Filters noise from Leaf nodes and synthesizes logic for the Central Commodore.";
+            if(data.role === 'Central') desc = "The Lead Agent. Final decision maker and narrative constructor.";
+
+            document.getElementById('detail-desc').innerText = desc;
+        }
+
+        function closeDetails() {
+            document.getElementById('detail-panel').classList.add('translate-x-full');
+        }
+
+        function log(msg, source) {
+            const container = document.getElementById('log-container');
+            const div = document.createElement('div');
+            let colorClass = "text-gray-400";
+            if(source === "ALPHA") colorClass = "text-emerald-400";
+            if(source === "GAMMA") colorClass = "text-blue-400";
+            if(source === "DELTA") colorClass = "text-purple-400";
+
+            const time = new Date().toLocaleTimeString('en-US', {hour12:false});
+            div.innerHTML = `<span class="text-xs text-slate-600">[${time}]</span> <span class="${colorClass}">${msg}</span>`;
+
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function resetCamera() {
+            camera.position.set(30, 20, 40);
+            controls.target.set(0,0,0);
+        }
+
+        function toggleRotation() {
+            isRotating = !isRotating;
+            document.getElementById('rot-btn').innerText = isRotating ? "Pause Rotation" : "Resume Rotation";
+        }
+
+        // --- Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (isRotating) {
+                scene.rotation.y += 0.001;
+            }
+
+            controls.update();
+            updatePackets();
+
+            // Animate central node breathing
+            const time = Date.now() * 0.001;
+            const central = nodes.find(n => n.userData.role === 'Central');
+            if(central) {
+                central.scale.setScalar(1 + Math.sin(time) * 0.05);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Start
+        init();
+
+        // Auto-trigger an event after 2 seconds
+        setTimeout(triggerVerification, 2000);
+
+    </script>
+</body>
+</html>
