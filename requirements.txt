@@ -1,0 +1,2 @@
+# Kiddush HaChodesh Kernel Core
+PyGithub

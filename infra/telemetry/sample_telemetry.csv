@@ -1,0 +1,4 @@
+bugid,bugtype,detectedby,timestamp,confidence,relaylatencyms,istruebug,payloadhash
+b1,syncerror,julesscanner,2026-06-28T05:00:00Z,0.98,12,1,abc123
+b2,sycophancy,jules_scanner,2026-06-28T05:01:00Z,0.45,15,0,def456
+b3,semanticnoise,julesscanner,2026-06-28T05:02:00Z,0.60,200,1,ghi789
