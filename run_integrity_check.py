@@ -1,7 +1,7 @@
 import os
 from molad import Molad
 from julius_time_kernel import TimeKernel
-from ontological_sanitizer import JulesOntologicalSanitizer
+from ontological_sanitizer import JulesOntologicalSanitizer, JulesIntegrationPayload
 from github_manager import initialize_clean_repository
 
 def main():
@@ -20,8 +20,14 @@ def main():
     result = sanitizer.scan_and_clean(".")
     print(result)
 
-    # 4. Initialize Clean Repository (Requires GITHUB_TOKEN environment variable)
-    print("\n--- STEP 2: REPOSITORY INITIALIZATION ---")
+    # 4. Logical State Synchronization
+    print("\n--- STEP 2: LOGICAL STATE SYNC ---")
+    payload = JulesIntegrationPayload()
+    sync_result = sanitizer.sync_logical_state(payload)
+    print(sync_result)
+
+    # 5. Initialize Clean Repository (Requires GITHUB_TOKEN environment variable)
+    print("\n--- STEP 3: REPOSITORY INITIALIZATION ---")
     token = os.getenv("GITHUB_TOKEN", "YOUR_TOKEN")
     repo_name = "Ontological-Integrity-System"
 
