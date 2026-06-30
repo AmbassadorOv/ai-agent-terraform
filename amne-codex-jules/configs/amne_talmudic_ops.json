@@ -1,0 +1,17 @@
+{
+  "third_field_operators": {
+    "version": "Sukkah_Kernel_1.0",
+    "operators": [
+      {
+        "id": "OP_SUKKAH_TEMP_STATE",
+        "trigger_phrases": ["מתיבי", "רמינהי", "מתקיף"],
+        "action": "flag_as_unstable_arai"
+      },
+      {
+        "id": "OP_HALACHA_PERMANENT_STATE",
+        "trigger_phrases": ["הלכה כ", "שמע מינה", "פשיטא"],
+        "action": "commit_to_kernel_keva"
+      }
+    ]
+  }
+}

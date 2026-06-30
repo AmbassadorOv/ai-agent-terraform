@@ -1,0 +1,8 @@
+{
+  "system_id": "AMNE_EXPERIMENTS",
+  "runtime": {"dry_run": true, "rate_limit_ms": 50},
+  "simulation": {"seed_base": 42, "state_dim": 64, "iterations": 100},
+  "bug_detection": {"drift_threshold": 0.5, "instability_threshold": 1.5, "hallucination_keyword_list": ["הזיה","סכך נועד","נחלים"]},
+  "forensics": {"worm_enabled": true, "worm_path": "outputs/worm_store"},
+  "outputs": {"out_dir": "outputs", "debug_manifest_template": "debug_manifest_{label}.json", "forensic_report_template": "forensic_report_{label}.json", "containment_manifest_template": "containment_manifest_{label}.json", "summary_template": "summary_{label}.json"}
+}

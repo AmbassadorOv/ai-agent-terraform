@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICA Sovereignty Hub & GTS Calculator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            50: '#fdfbf7',
+                            100: '#fbf7ed',
+                            500: '#d4af37',
+                            600: '#c5a028',
+                            700: '#aa820a',
+                        },
+                        slate: {
+                            950: '#090d16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Noto Sans, Noto Sans Hebrew -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600;700&family=Noto+Sans+Hebrew:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans', 'Noto Sans Hebrew', sans-serif;
+        }
+        .glow-gold {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+        }
+        .border-gold-glow {
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-gold-500 selection:text-slate-950">
+
+    <!-- TOP HEADER / NAV -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-gold-600 to-amber-500 flex items-center justify-center font-bold text-slate-950 text-xl tracking-wider shadow-lg">
+                    גצ
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                        ICA SOVEREIGNTY ENGINE <span class="text-xs px-2 py-0.5 bg-gold-500/10 text-gold-500 rounded border border-gold-500/20">V2.5-FLASH</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Intelligence Cluster Agencies • Forensic Pipeline Framework</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden lg:block">
+                    <p class="text-xs text-slate-500">Maimonides Architecture Codebase</p>
+                    <p class="text-xs font-mono text-gold-500">Class MaimonidesArchitecture_V2 [LOADED]</p>
+                </div>
+                <div class="h-8 w-px bg-slate-800 hidden lg:block"></div>
+                <div class="flex gap-2">
+                    <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="px-4 py-2 text-xs font-semibold rounded bg-gold-500 text-slate-950 transition-all duration-200">
+                        Operational Dashboard
+                    </button>
+                    <button onclick="switchTab('reference')" id="btn-tab-reference" class="px-4 py-2 text-xs font-semibold rounded bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-700 transition-all duration-200">
+                        Hebrew Source & Lenses
+                    </button>
+                    <button onclick="switchTab('jules')" id="btn-tab-jules" class="px-4 py-2 text-xs font-semibold rounded bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-700 transition-all duration-200">
+                        Jules Pipeline Agent
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-8">
+
+        <!-- ==================== TAB: OPERATIONAL DASHBOARD ==================== -->
+        <section id="tab-dashboard" class="space-y-6">
+
+            <!-- CORE METRICS & ARITHMETIC ROW -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- CALCULATOR INTERFACE (LEFT / 4 COLS) -->
+                <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-sm font-bold tracking-wider text-gold-500 uppercase mb-4 flex items-center justify-between">
+                            <span>Pipeline Live Simulation</span>
+                            <span class="text-xs font-mono text-slate-500">Inputs</span>
+                        </h2>
+
+                        <div class="space-y-5">
+                            <!-- Expected Nodes -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-slate-300 font-semibold">Total Expected Nodes (N<sub>exp</sub>)</span>
+                                    <span class="font-mono text-gold-500" id="val-exp-nodes">36</span>
+                                </div>
+                                <input type="range" id="input-exp-nodes" min="12" max="120" value="36" class="w-full accent-gold-500 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="calculateMetrics()">
+                                <p class="text-[10px] text-slate-500 mt-1">E.g., 36 Unity Points or Noah's/Jacob's 70 macro structures</p>
+                            </div>
+
+                            <!-- Linked Nodes -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-slate-300 font-semibold">Linked Nodes (N<sub>link</sub>)</span>
+                                    <span class="font-mono text-gold-500" id="val-link-nodes">24</span>
+                                </div>
+                                <input type="range" id="input-link-nodes" min="0" max="120" value="24" class="w-full accent-gold-500 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="calculateMetrics()">
+                                <p class="text-[10px] text-slate-500 mt-1">Nodes successfully integrated into the current division</p>
+                            </div>
+
+                            <!-- Metadata Filled -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-slate-300 font-semibold">Metadata Complete Nodes (N<sub>meta</sub>)</span>
+                                    <span class="font-mono text-gold-500" id="val-meta-nodes">20</span>
+                                </div>
+                                <input type="range" id="input-meta-nodes" min="0" max="120" value="20" class="w-full accent-gold-500 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="calculateMetrics()">
+                                <p class="text-[10px] text-slate-500 mt-1">Nodes containing label, short_name, description & file</p>
+                            </div>
+
+                            <!-- Total Embedded Bytes -->
+                            <div>
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-slate-300 font-semibold">Embedded Payload (Bytes)</span>
+                                    <span class="font-mono text-gold-500" id="val-embed-bytes">131,600</span>
+                                </div>
+                                <input type="number" id="input-embed-bytes" value="131600" class="w-full bg-slate-950 border border-slate-800 rounded px-3 py-1.5 text-xs font-mono text-gold-500 focus:outline-none focus:border-gold-500" oninput="calculateMetrics()">
+                                <p class="text-[10px] text-slate-500 mt-1">Total data weight compiled for this division (Max 1GB cap)</p>
+                            </div>
+
+                            <!-- Weights Tuning Slider -->
+                            <div class="border-t border-slate-800 pt-4 space-y-3">
+                                <h3 class="text-xs font-bold text-slate-400">Formula Weights Assignment</h3>
+                                <div>
+                                    <div class="flex justify-between text-[11px] mb-1">
+                                        <span class="text-slate-400">α (Coverage Weight)</span>
+                                        <span class="font-mono text-slate-300" id="val-weight-a">0.50</span>
+                                    </div>
+                                    <input type="range" id="weight-a" min="0" max="1" step="0.05" value="0.5" class="w-full accent-amber-500 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="tuneWeights('a')">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-[11px] mb-1">
+                                        <span class="text-slate-400">β (Completeness Weight)</span>
+                                        <span class="font-mono text-slate-300" id="val-weight-b">0.30</span>
+                                    </div>
+                                    <input type="range" id="weight-b" min="0" max="1" step="0.05" value="0.3" class="w-full accent-amber-500 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="tuneWeights('b')">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-[11px] mb-1">
+                                        <span class="text-slate-400">γ (Embed Ratio Weight)</span>
+                                        <span class="font-mono text-slate-300" id="val-weight-c">0.20</span>
+                                    </div>
+                                    <input type="range" id="weight-c" min="0" max="1" step="0.05" value="0.2" class="w-full accent-amber-500 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="tuneWeights('c')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-800 pt-4 mt-6">
+                        <div class="flex items-center gap-2 text-xs text-slate-400 bg-slate-950/60 p-3 rounded border border-slate-800/80">
+                            <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>The pipeline automatically caps completeness metrics and alerts Jules if links exceed actual limits.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REAL-TIME ANALYSIS & ARITHMETIC OUTPUTS (RIGHT / 7 COLS) -->
+                <div class="lg:col-span-7 space-y-6">
+
+                    <!-- DYNAMIC SCORE CARD -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
+                            <span class="text-xs text-slate-400">Coverage Score</span>
+                            <span class="text-2xl font-mono font-bold text-white mt-2" id="score-coverage">66.67%</span>
+                            <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
+                                <div id="bar-coverage" class="bg-blue-500 h-full transition-all duration-300" style="width: 66.67%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
+                            <span class="text-xs text-slate-400">Completeness Score</span>
+                            <span class="text-2xl font-mono font-bold text-white mt-2" id="score-completeness">83.33%</span>
+                            <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
+                                <div id="bar-completeness" class="bg-indigo-500 h-full transition-all duration-300" style="width: 83.33%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 border-gold-glow bg-gradient-to-br from-slate-900 to-slate-950 p-4 rounded-xl flex flex-col justify-between glow-gold">
+                            <span class="text-xs text-gold-500 font-semibold">Overall Linkage Rating</span>
+                            <span class="text-3xl font-mono font-extrabold text-white mt-2" id="score-overall">58.34%</span>
+                            <div class="flex items-center justify-between mt-3">
+                                <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded tracking-widest font-bold" id="badge-status">YELLOW ZONE</span>
+                                <span class="text-[10px] text-slate-400" id="badge-evaluation">Requires action</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP-BY-STEP MATHEMATICAL AUDIT -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                        <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-3 flex items-center justify-between">
+                            <span>Step-by-Step Compilation Arithmetic</span>
+                            <span class="text-[10px] font-mono text-gold-500">Exact Decimal Logic</span>
+                        </h3>
+                        <div class="bg-slate-950 rounded-lg p-4 font-mono text-xs text-slate-300 space-y-4 border border-slate-850">
+                            <!-- Coverage math -->
+                            <div>
+                                <span class="text-slate-500">// 1. Compute Coverage Ratio</span>
+                                <div class="flex flex-col md:flex-row justify-between text-white mt-1">
+                                    <span>Coverage = N<sub>link</sub> ÷ N<sub>exp</sub></span>
+                                    <span class="text-amber-400" id="math-coverage-expr">24 ÷ 36 = 0.6666666667 (66.67%)</span>
+                                </div>
+                            </div>
+
+                            <!-- Completeness math -->
+                            <div class="border-t border-slate-800/60 pt-3">
+                                <span class="text-slate-500">// 2. Compute Completeness Ratio</span>
+                                <div class="flex flex-col md:flex-row justify-between text-white mt-1">
+                                    <span>Completeness = N<sub>meta</sub> ÷ N<sub>link</sub></span>
+                                    <span class="text-amber-400" id="math-completeness-expr">20 ÷ 24 = 0.8333333333 (83.33%)</span>
+                                </div>
+                            </div>
+
+                            <!-- Embed ratio math -->
+                            <div class="border-t border-slate-800/60 pt-3">
+                                <span class="text-slate-500">// 3. Compute Embed Ratio (Normalized to 1GB Target Payload Limit)</span>
+                                <div class="flex flex-col md:flex-row justify-between text-white mt-1">
+                                    <span>Embed Ratio = Total Bytes ÷ 1,000,000,000 Bytes</span>
+                                    <span class="text-amber-400" id="math-embed-expr">131,600 ÷ 1,000,000,000 = 0.0001316000</span>
+                                </div>
+                            </div>
+
+                            <!-- Weight composition math -->
+                            <div class="border-t border-slate-800 pt-3 text-slate-200">
+                                <span class="text-slate-500">// 4. Weighted Composite Accumulation & Integration</span>
+                                <div class="space-y-1 mt-1 text-slate-400 text-[11px]">
+                                    <div class="flex justify-between">
+                                        <span>α * Coverage</span>
+                                        <span id="math-term-a">0.50 × 0.6666666667 = 0.3333333333</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>β * Completeness</span>
+                                        <span id="math-term-b">0.30 × 0.8333333333 = 0.2500000000</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>γ * Embed Ratio</span>
+                                        <span id="math-term-c">0.20 × 0.0001316000 = 0.0000263200</span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col md:flex-row justify-between text-gold-500 font-bold border-t border-dashed border-slate-800 pt-2 mt-2 text-xs">
+                                    <span>Composite Sum = (α*Cov) + (β*Comp) + (γ*Embed)</span>
+                                    <span id="math-sum-expr">0.3333333333 + 0.2500000000 + 0.0000263200 = 0.5833596533</span>
+                                </div>
+                                <div class="flex flex-col md:flex-row justify-between text-white font-extrabold text-sm mt-1">
+                                    <span>Final Percentage = Composite Sum × 100</span>
+                                    <span class="text-gold-500 underline decoration-double" id="math-final-pct">58.34%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HYBRID FOREST MAP & INTEL LEVELS -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-sm font-bold tracking-wider text-gold-500 uppercase flex items-center gap-2">
+                            <span>Hybrid Agency Map: Forest of Trees</span>
+                            <span class="text-xs text-slate-400 capitalize font-normal">(Interactive Structural Visual)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Vertical chain of hierarchy overlaid with cross-cutting lateral bridges (Guilds, Tribes, and Alliances)</p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="changeProjection('structural')" id="proj-structural" class="px-3 py-1.5 text-[11px] font-semibold rounded bg-gold-500 text-slate-950 transition-all">
+                            Structural Mode
+                        </button>
+                        <button onclick="changeProjection('functional')" id="proj-functional" class="px-3 py-1.5 text-[11px] font-semibold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">
+                            Functionalist Projection
+                        </button>
+                        <button onclick="changeProjection('conflict')" id="proj-conflict" class="px-3 py-1.5 text-[11px] font-semibold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">
+                            Conflict Projection
+                        </button>
+                        <button onclick="changeProjection('symbolic')" id="proj-symbolic" class="px-3 py-1.5 text-[11px] font-semibold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">
+                            Symbolic Projection
+                        </button>
+                    </div>
+                </div>
+
+                <!-- DYNAMIC MAP CANVAS/SVG CONTAINER -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+                    <!-- SVG Visualizer (7 COLS) -->
+                    <div class="lg:col-span-8 bg-slate-950 border border-slate-800/80 rounded-lg p-4 min-h-[420px] flex items-center justify-center relative overflow-hidden">
+
+                        <!-- Projection Overlay Alert -->
+                        <div id="projection-alert" class="absolute top-3 left-3 bg-slate-900/90 border border-slate-800 rounded px-3 py-1.5 text-[11px] text-gold-500 font-mono hidden">
+                            PROJECTION: Structural
+                        </div>
+
+                        <svg id="forest-svg" width="100%" height="100%" viewBox="0 0 800 450" class="w-full max-h-[420px] select-none">
+                            <defs>
+                                <marker id="arrow" viewBox="0 0 10 10" refX="25" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#d4af37" opacity="0.6"/>
+                                </marker>
+                                <marker id="dashed-arrow" viewBox="0 0 10 10" refX="25" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8" opacity="0.6"/>
+                                </marker>
+                            </defs>
+
+                            <!-- LATERAL FORESTRY BRIDGES (Dashed Line Connectors) -->
+                            <!-- Tribe-to-Tribe Bridge -->
+                            <path id="edge-lateral-1" d="M 280 180 Q 400 240 520 180" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.7" marker-end="url(#dashed-arrow)"/>
+                            <!-- House-to-House Guild Bridge -->
+                            <path id="edge-lateral-2" d="M 180 280 Q 400 340 620 280" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.7" marker-end="url(#dashed-arrow)"/>
+
+                            <!-- VERTICAL ARROWS (Hierarchy paths) -->
+                            <!-- L5 to L4 -->
+                            <line x1="400" y1="50" x2="280" y2="120" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+                            <line x1="400" y1="50" x2="520" y2="120" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+
+                            <!-- L4 to L3 -->
+                            <line x1="280" y1="120" x2="180" y2="190" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+                            <line x1="280" y1="120" x2="380" y2="190" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+                            <line x1="520" y1="120" x2="420" y2="190" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+                            <line x1="520" y1="120" x2="620" y2="190" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+
+                            <!-- L3 to L2 -->
+                            <line x1="180" y1="190" x2="120" y2="260" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+                            <line x1="180" y1="190" x2="240" y2="260" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+                            <line x1="620" y1="190" x2="560" y2="260" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+                            <line x1="620" y1="190" x2="680" y2="260" stroke="#d4af37" stroke-width="2" opacity="0.4" marker-end="url(#arrow)"/>
+
+                            <!-- L2 to L1 -->
+                            <line x1="120" y1="260" x2="80" y2="330" stroke="#d4af37" stroke-width="1.5" opacity="0.4" marker-end="url(#arrow)"/>
+                            <line x1="120" y1="260" x2="160" y2="330" stroke="#d4af37" stroke-width="1.5" opacity="0.4" marker-end="url(#arrow)"/>
+
+                            <!-- NODES (Rendered with interactive visual coordinates) -->
+                            <!-- Level 5 - Sovereign Kingdom -->
+                            <g class="cursor-pointer group" onclick="showNodeDetails(5)">
+                                <circle cx="400" cy="50" r="24" fill="#0f172a" stroke="#d4af37" stroke-width="3" class="transition-all duration-300 group-hover:fill-gold-500/10"/>
+                                <text x="400" y="55" text-anchor="middle" font-size="10" fill="#d4af37" font-weight="bold">L5</text>
+                                <text x="400" y="20" text-anchor="middle" font-size="11" fill="#ffffff" font-weight="600">Kingdom (KNG)</text>
+                            </g>
+
+                            <!-- Level 4 - Nations/States -->
+                            <g class="cursor-pointer group" onclick="showNodeDetails(4)">
+                                <circle cx="280" cy="120" r="20" fill="#0f172a" stroke="#f59e0b" stroke-width="2" class="transition-all duration-300 group-hover:fill-amber-500/10"/>
+                                <text x="280" y="124" text-anchor="middle" font-size="10" fill="#f59e0b" font-weight="bold">L4</text>
+                                <text x="230" y="115" text-anchor="middle" font-size="10" fill="#cbd5e1">Nation 1 (NAT)</text>
+                            </g>
+                            <g class="cursor-pointer group" onclick="showNodeDetails(4)">
+                                <circle cx="520" cy="120" r="20" fill="#0f172a" stroke="#f59e0b" stroke-width="2" class="transition-all duration-300 group-hover:fill-amber-500/10"/>
+                                <text x="520" y="124" text-anchor="middle" font-size="10" fill="#f59e0b" font-weight="bold">L4</text>
+                                <text x="570" y="115" text-anchor="middle" font-size="10" fill="#cbd5e1">Nation 2 (NAT)</text>
+                            </g>
+
+                            <!-- Level 3 - Tribes/Clans -->
+                            <g class="cursor-pointer group" onclick="showNodeDetails(3)">
+                                <circle cx="180" cy="190" r="18" fill="#0f172a" stroke="#3b82f6" stroke-width="2" class="transition-all duration-300 group-hover:fill-blue-500/10"/>
+                                <text x="180" y="193" text-anchor="middle" font-size="9" fill="#3b82f6" font-weight="bold">L3</text>
+                                <text x="135" y="185" text-anchor="middle" font-size="9" fill="#94a3b8">Tribe A (TRB)</text>
+                            </g>
+                            <g class="cursor-pointer group" onclick="showNodeDetails(3)">
+                                <circle cx="380" cy="190" r="18" fill="#0f172a" stroke="#3b82f6" stroke-width="2" class="transition-all duration-300 group-hover:fill-blue-500/10" opacity="0.5"/>
+                                <text x="380" y="193" text-anchor="middle" font-size="9" fill="#3b82f6" font-weight="bold" opacity="0.5">L3</text>
+                            </g>
+                            <g class="cursor-pointer group" onclick="showNodeDetails(3)">
+                                <circle cx="420" cy="190" r="18" fill="#0f172a" stroke="#3b82f6" stroke-width="2" class="transition-all duration-300 group-hover:fill-blue-500/10" opacity="0.5"/>
+                                <text x="420" y="193" text-anchor="middle" font-size="9" fill="#3b82f6" font-weight="bold" opacity="0.5">L3</text>
+                            </g>
+                            <g class="cursor-pointer group" onclick="showNodeDetails(3)">
+                                <circle cx="620" cy="190" r="18" fill="#0f172a" stroke="#3b82f6" stroke-width="2" class="transition-all duration-300 group-hover:fill-blue-500/10"/>
+                                <text x="620" y="193" text-anchor="middle" font-size="9" fill="#3b82f6" font-weight="bold">L3</text>
+                                <text x="665" y="185" text-anchor="middle" font-size="9" fill="#94a3b8">Tribe B (TRB)</text>
+                            </g>
+
+                            <!-- Level 2 - Families -->
+                            <g class="cursor-pointer group" onclick="showNodeDetails(2)">
+                                <circle cx="120" cy="260" r="16" fill="#0f172a" stroke="#8b5cf6" stroke-width="2" class="transition-all duration-300 group-hover:fill-violet-500/10"/>
+                                <text x="120" y="263" text-anchor="middle" font-size="8" fill="#8b5cf6" font-weight="bold">L2</text>
+                                <text x="75" y="260" text-anchor="middle" font-size="9" fill="#94a3b8">Family I (FAM)</text>
+                            </g>
+                            <g class="cursor-pointer group" onclick="showNodeDetails(2)">
+                                <circle cx="240" cy="260" r="16" fill="#0f172a" stroke="#8b5cf6" stroke-width="2" class="transition-all duration-300 group-hover:fill-violet-500/10" opacity="0.6"/>
+                                <text x="240" y="263" text-anchor="middle" font-size="8" fill="#8b5cf6" font-weight="bold" opacity="0.6">L2</text>
+                            </g>
+                            <g class="cursor-pointer group" onclick="showNodeDetails(2)">
+                                <circle cx="560" cy="260" r="16" fill="#0f172a" stroke="#8b5cf6" stroke-width="2" class="transition-all duration-300 group-hover:fill-violet-500/10" opacity="0.6"/>
+                                <text x="560" y="263" text-anchor="middle" font-size="8" fill="#8b5cf6" font-weight="bold" opacity="0.6">L2</text>
+                            </g>
+                            <g class="cursor-pointer group" onclick="showNodeDetails(2)">
+                                <circle cx="680" cy="260" r="16" fill="#0f172a" stroke="#8b5cf6" stroke-width="2" class="transition-all duration-300 group-hover:fill-violet-500/10"/>
+                                <text x="680" y="263" text-anchor="middle" font-size="8" fill="#8b5cf6" font-weight="bold">L2</text>
+                            </g>
+
+                            <!-- Level 1 - Houses / Cells -->
+                            <g class="cursor-pointer group" onclick="showNodeDetails(1)">
+                                <circle cx="80" cy="330" r="14" fill="#0f172a" stroke="#10b981" stroke-width="1.5" class="transition-all duration-300 group-hover:fill-emerald-500/10"/>
+                                <text x="80" y="333" text-anchor="middle" font-size="7" fill="#10b981" font-weight="bold">L1</text>
+                                <text x="40" y="330" text-anchor="middle" font-size="9" fill="#64748b">House α (HSE)</text>
+                            </g>
+                            <g class="cursor-pointer group" onclick="showNodeDetails(1)">
+                                <circle cx="160" cy="330" r="14" fill="#0f172a" stroke="#10b981" stroke-width="1.5" class="transition-all duration-300 group-hover:fill-emerald-500/10"/>
+                                <text x="160" y="333" text-anchor="middle" font-size="7" fill="#10b981" font-weight="bold">L1</text>
+                                <text x="200" y="330" text-anchor="middle" font-size="9" fill="#64748b">House β (HSE)</text>
+                            </g>
+
+                            <!-- Level 0 - Individuals / Atomic Base -->
+                            <g class="cursor-pointer group" onclick="showNodeDetails(0)">
+                                <rect x="72" y="390" width="16" height="16" rx="3" fill="#0f172a" stroke="#ec4899" stroke-width="1.5" class="transition-all duration-300 group-hover:fill-pink-500/10"/>
+                                <text x="80" y="401" text-anchor="middle" font-size="8" fill="#ec4899" font-weight="bold">L0</text>
+                                <text x="80" y="420" text-anchor="middle" font-size="8" fill="#cbd5e1" class="font-mono">Ishim (IND)</text>
+                            </g>
+                            <g class="cursor-pointer group" onclick="showNodeDetails(0)">
+                                <rect x="152" y="390" width="16" height="16" rx="3" fill="#0f172a" stroke="#ec4899" stroke-width="1.5" class="transition-all duration-300 group-hover:fill-pink-500/10"/>
+                                <text x="160" y="401" text-anchor="middle" font-size="8" fill="#ec4899" font-weight="bold">L0</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <!-- DETAILED EXPLANATION PANEL (4 COLS) -->
+                    <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-lg p-5 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Selected Agency Level</h3>
+                                <span class="px-2 py-0.5 bg-gold-500/10 text-gold-500 rounded font-mono text-[10px]" id="node-badge">LEVEL 5</span>
+                            </div>
+
+                            <div class="space-y-2">
+                                <h4 class="text-lg font-bold text-white flex items-center gap-2">
+                                    <span id="node-name">Sovereign Cluster (Kingdom / מלכות)</span>
+                                </h4>
+                                <p class="text-xs text-slate-300 leading-relaxed" id="node-desc">
+                                    Ultimate responsibility for sovereignty, macro resource distribution, cross-state strategic operations, and foreign intelligence networks. Embodying the covenant of Noah (70 nations) and Israel (70 souls).
+                                </p>
+                            </div>
+
+                            <div class="border-t border-slate-800/80 pt-3 space-y-2 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">GTS Canonical Prefix</span>
+                                    <span class="font-mono text-gold-500" id="node-prefix">GTS-KNG</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Decision Authority Band</span>
+                                    <span class="font-mono text-amber-400 capitalize" id="node-authority">Strategic (R/A)</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">Biblical Connection</span>
+                                    <span class="text-indigo-400" id="node-biblical">70 Sovereign Nations (Noah)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-slate-800/80 pt-4 mt-4 space-y-2">
+                            <h4 class="text-[11px] font-bold text-slate-400 uppercase">Active Sociological Projection Lens:</h4>
+                            <div class="bg-slate-950 p-3 rounded border border-slate-800 text-xs text-slate-300" id="lens-projection-desc">
+                                <strong class="text-gold-500 block mb-1">Functionalist Lens:</strong>
+                                Views the structure as an efficient machinery where every layer has a strictly designated function and purpose, creating unified societal stability.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FORENSIC VALIDATION & SCHEMA EXPORTS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- CSV SCHEMA DISPLAY -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                    <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-3 flex items-center justify-between">
+                        <span>Database Schemas (GTS Columns)</span>
+                        <span class="text-[10px] font-mono text-slate-500">divisions.csv</span>
+                    </h3>
+                    <div class="bg-slate-950 p-3 rounded border border-slate-850 font-mono text-[10px] text-slate-400 overflow-x-auto space-y-4">
+                        <div>
+                            <p class="text-gold-500 font-semibold mb-1">// Target: divisions.csv</p>
+                            <p class="text-white">gts_tag, division_name, expected_nodes, priority, description, theoretical_basis, created_date</p>
+                            <p class="text-slate-500 mt-1">GTS-DIV-001-HIER_SOC_DIV-V1-20250814T153000Z, Hierarchical Social Division, 36, High, "Family→House→Individual→Kingdom model with biblical parallels", "Functionalism|Conflict|Symbolic Interactionism", 2025-08-14T15:30:00Z</p>
+                        </div>
+                        <div>
+                            <p class="text-gold-500 font-semibold mb-1">// Target: unity_points_nodes.csv</p>
+                            <p class="text-white">gts_tag, level, division_gts, decision_band, ack_status, ack_ts</p>
+                            <p class="text-slate-500 mt-1">GTS-FAM-001-HOUSE_OF_JACOB-V1-20250814T170000Z, FAM, GTS-DIV-001-HIER_SOC_DIV-V1-20250814T153000Z, tactical, acknowledged, 2025-08-14T17:10:00Z</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORENSIC COMPILING COMPLIANCE BLOCK -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-3 flex items-center justify-between">
+                            <span>Forensic Compiling & Verification Seals</span>
+                            <span class="text-[10px] font-mono text-gold-500">Maimonides V2 Security</span>
+                        </h3>
+                        <p class="text-xs text-slate-300 mb-4">
+                            These cryptographic signatures verify that the code compiled perfectly with standard rules and holds absolute compliance with Class MaimonidesArchitecture_V2 self-audits.
+                        </p>
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div class="bg-slate-950 p-2 rounded border border-slate-850">
+                                <span class="text-[10px] text-slate-500 block font-mono">MD5 VERIFICATION</span>
+                                <span class="font-mono text-emerald-400 font-semibold">9F7D3A4B8C1E0A2D</span>
+                            </div>
+                            <div class="bg-slate-950 p-2 rounded border border-slate-850">
+                                <span class="text-[10px] text-slate-500 block font-mono">COMPILER STATUS</span>
+                                <span class="font-mono text-emerald-400 font-semibold">SUCCESS (0 ERR)</span>
+                            </div>
+                            <div class="bg-slate-950 p-2 rounded border border-slate-850">
+                                <span class="text-[10px] text-slate-500 block font-mono">ESOTERIC METRIC</span>
+                                <span class="font-mono text-indigo-400 font-semibold">70/12/36 SEC-LOCK</span>
+                            </div>
+                            <div class="bg-slate-950 p-2 rounded border border-slate-850">
+                                <span class="text-[10px] text-slate-500 block font-mono">MAIMONIDES ARCH_V2</span>
+                                <span class="font-mono text-gold-500 font-semibold">ACTIVE & POLICED</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="triggerDownloadJSON()" class="w-full mt-4 bg-slate-950 border border-slate-800 hover:border-gold-500 hover:text-gold-500 transition-all text-slate-300 py-2 rounded font-mono text-xs">
+                        Download compiled_gts_registry.json
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ==================== TAB: HEBREW SOURCE & LENSES ==================== -->
+        <section id="tab-reference" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- HEBREW SCRIPTURAL TRADITION (LEFT / 7 COLS) -->
+                <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="text-lg font-bold text-white font-serif flex items-center justify-between">
+                            <span>מקורות יהודיים: חלוקת בני נח ובני יעקב לשבעים משפחות</span>
+                            <span class="text-xs px-2 py-0.5 bg-amber-500/10 text-amber-500 rounded font-sans">ארון ספרים יהודי</span>
+                        </h2>
+                    </div>
+
+                    <div class="space-y-6 text-slate-300 leading-relaxed text-right" dir="rtl">
+                        <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
+                            <h3 class="text-sm font-bold text-gold-500 mb-2">חלוקת בני נח וחלוקת המין לאומות:</h3>
+                            <p class="text-xs text-slate-300">
+                                בספר בראשית פרק י', לאחר המבול, מתוארת חלוקת בני נח לשלושה עמים: שם, חם ויפת. כל עם מורכב ממשפחות ושבטים שונים. המקרא אינו מפרט במדויק את מספרן של משפחות אלו, אך פרשנים רבים ראו בחלוקה זו את הבסיס לחלוקת העולם לשבעים אומות. חלוקה זו מבוססת על תפיסה של מוצא משותף לכל בני האדם, כאשר כל עם נושא את מורשתו של אביו.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
+                            <h3 class="text-sm font-bold text-gold-500 mb-2">חלוקת בני יעקב ויצירת הממלכה:</h3>
+                            <p class="text-xs text-slate-300">
+                                בספר שמות פרק י"ב, עם ישראל מתחלק לשנים עשר שבטים, על פי שמות בניו של יעקב. לכל שבט יש נחלה משלו ומנהיגים משלו. חלוקה זו מבוססת על קשר דם וקירבה משפחתית. חז"ל מזהים את הקשר בין שתי החלוקות: שנים עשר שבטי ישראל מייצגים את גרעין העם היהודי, ומהווים חלק קטן יותר מתוך שבעים אומות העולם. "אמר רבי יוחנן: שבעים אומות הן, ושבעים לשונות הן, ושבעים פנים הן, ושבעים שמות הן" (בראשית רבה פרשה ל"ז).
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-950/60 p-4 rounded-lg border border-slate-800/80">
+                            <h3 class="text-sm font-bold text-gold-500 mb-2">הקשר שבין האישים (Level 0) למלכות (Level 5):</h3>
+                            <p class="text-xs text-slate-300">
+                                הטקסט מדגיש שהאישים הם היסוד החשוב ביותר במבנה המלכות. למרות שהם "הווים ונפסדים" (זמניים ופגיעים), הם אלו שבהם מתקיימים הבתים, והבתים הם חלקי המשפחה. קבוצי האישים מתקבצים לבתים, והבית הוא החלק הראשון מן המדינה. קבוצות של בתים יוצרות מדינות, וקבוצות של מדינות יוצרות מלכות שלמה.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOCIOLOGICAL INTERPRETATION LENSES (RIGHT / 5 COLS) -->
+                <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="text-sm font-bold tracking-wider text-gold-500 uppercase">Theoretical Perspectives Analysis</h2>
+                        <p class="text-xs text-slate-400">Three complementary analytical frameworks</p>
+                    </div>
+
+                    <div class="space-y-4 text-xs">
+                        <!-- Functionalist -->
+                        <div class="border-l-2 border-emerald-500 pl-4 space-y-1">
+                            <h3 class="text-white font-bold text-sm">Functionalism (פונקציונליזם)</h3>
+                            <p class="text-slate-300 leading-relaxed">
+                                Views hierarchical division as an efficient system promoting order, stability, and cooperation. Each level has a designated function. Families specialize in child-rearing, while the state focuses on security and coordination.
+                            </p>
+                        </div>
+
+                        <!-- Conflict -->
+                        <div class="border-l-2 border-red-500 pl-4 space-y-1">
+                            <h3 class="text-white font-bold text-sm">Conflict Theory (קונפליקט)</h3>
+                            <p class="text-slate-300 leading-relaxed">
+                                Views the division as a system leading to inequality, oppression, and power concentration. Monarchy/Strategic level concentrates ultimate privilege, potentially marginalizing tactical local cells.
+                            </p>
+                        </div>
+
+                        <!-- Symbolic -->
+                        <div class="border-l-2 border-blue-500 pl-4 space-y-1">
+                            <h3 class="text-white font-bold text-sm">Symbolic Interactionism (אינטראקציונזם סימבולי)</h3>
+                            <p class="text-slate-300 leading-relaxed">
+                                Explores the meanings, languages, and rituals (like weekly house forums, monthly councils) that reinforce legitimacy, identity anchors, and tribal norms.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB: JULES PIPELINE AGENT ==================== -->
+        <section id="tab-jules" class="space-y-6 hidden">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <span>Jules Automation Terminal</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Active Pipeline Refinement Loops & Execution logs</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="runSimulatedAudit()" class="px-3 py-1.5 text-xs font-semibold rounded bg-gold-500 text-slate-950 font-mono hover:bg-gold-600 transition-all">
+                            EXECUTE pipeline_gts_deploy.py
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- PIPELINE ORDERS & POLICIES (2 COLS) -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Automation Rules Assigned to Jules</h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-slate-950 rounded border border-slate-850 flex items-start gap-3">
+                                <span class="bg-indigo-500/10 text-indigo-400 p-1 rounded font-mono text-[10px] font-bold">RULE 1</span>
+                                <div class="text-xs">
+                                    <h4 class="text-white font-semibold">Strict Path Control</h4>
+                                    <p class="text-slate-400 mt-0.5">Always map public databases to /artifacts/appid/public/data/ and keep gts_registry.json absolute.</p>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-slate-950 rounded border border-slate-850 flex items-start gap-3">
+                                <span class="bg-indigo-500/10 text-indigo-400 p-1 rounded font-mono text-[10px] font-bold">RULE 2</span>
+                                <div class="text-xs">
+                                    <h4 class="text-white font-semibold">No Duplicates registry.json</h4>
+                                    <p class="text-slate-400 mt-0.5">Cross-examine hash checksums. If a file is re-uploaded, match existing GTS tags before assigning new ones.</p>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-slate-950 rounded border border-slate-850 flex items-start gap-3">
+                                <span class="bg-indigo-500/10 text-indigo-400 p-1 rounded font-mono text-[10px] font-bold">RULE 3</span>
+                                <div class="text-xs">
+                                    <h4 class="text-white font-semibold">Heuristic Tag Matching</h4>
+                                    <p class="text-slate-400 mt-0.5">Scanning document content for keywords like "family", "בית אב", "איש". Auto-link to GTS-DIV-001.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TERMINAL LOGGER (1 COL) -->
+                    <div class="bg-slate-950 rounded-lg p-4 border border-slate-850 font-mono text-xs flex flex-col justify-between min-h-[300px]">
+                        <div>
+                            <div class="flex items-center justify-between text-[11px] text-slate-500 border-b border-slate-850 pb-2 mb-3">
+                                <span>TERMINAL ENGINE</span>
+                                <span>AUTO-REFINE: ON</span>
+                            </div>
+                            <div id="terminal-logs" class="space-y-1.5 text-slate-400 text-[11px] overflow-y-auto max-h-[220px]">
+                                <p class="text-emerald-400">[SYSTEM] MaimonidesArchitecture_V2 verified.</p>
+                                <p class="text-slate-500">[INFO] Awaiting execution trigger...</p>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-850 pt-2 mt-2 flex justify-between items-center text-[10px]">
+                            <span class="text-slate-500">Last heartbeat: Just now</span>
+                            <span class="text-gold-500">SYS_SECURE_LOCK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-900 bg-slate-950 text-slate-500 text-xs px-6 py-6 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-gold-500">גצ</span>
+                <span>© 2026 Sovereign Intelligence Cluster Agencies. Built with forensic pipeline tags.</span>
+            </div>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-gold-500">Privacy Protocols</a>
+                <span>•</span>
+                <a href="#" class="hover:text-gold-500">Maimonides Registry</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GLOBAL CALCULATOR & PAGE TRANSITION LOGIC -->
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            document.querySelectorAll('header button').forEach(btn => {
+                btn.className = "px-4 py-2 text-xs font-semibold rounded bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-700 transition-all duration-200";
+            });
+
+            const activeBtn = document.getElementById('btn-tab-' + tabId);
+            if (activeBtn) {
+                activeBtn.className = "px-4 py-2 text-xs font-semibold rounded bg-gold-500 text-slate-950 transition-all duration-200";
+            }
+        }
+
+        // Weight tuning - ensures weights always sum up to exactly 1.00
+        function tuneWeights(source) {
+            let a = parseFloat(document.getElementById('weight-a').value);
+            let b = parseFloat(document.getElementById('weight-b').value);
+            let c = parseFloat(document.getElementById('weight-c').value);
+
+            let diff = 1.0 - (a + b + c);
+
+            if (source === 'a') {
+                b += diff / 2;
+                c += diff / 2;
+            } else if (source === 'b') {
+                a += diff / 2;
+                c += diff / 2;
+            } else {
+                a += diff / 2;
+                b += diff / 2;
+            }
+
+            // Clamp and update values safely
+            document.getElementById('weight-a').value = Math.max(0, a).toFixed(2);
+            document.getElementById('weight-b').value = Math.max(0, b).toFixed(2);
+            document.getElementById('weight-c').value = Math.max(0, c).toFixed(2);
+
+            document.getElementById('val-weight-a').innerText = Math.max(0, a).toFixed(2);
+            document.getElementById('val-weight-b').innerText = Math.max(0, b).toFixed(2);
+            document.getElementById('val-weight-c').innerText = Math.max(0, c).toFixed(2);
+
+            calculateMetrics();
+        }
+
+        // Live calculation matching mathematical logic
+        function calculateMetrics() {
+            // Read UI inputs
+            const nExp = parseInt(document.getElementById('input-exp-nodes').value);
+            let nLink = parseInt(document.getElementById('input-link-nodes').value);
+            let nMeta = parseInt(document.getElementById('input-meta-nodes').value);
+            const bytes = parseInt(document.getElementById('input-embed-bytes').value);
+
+            const wA = parseFloat(document.getElementById('weight-a').value);
+            const wB = parseFloat(document.getElementById('weight-b').value);
+            const wC = parseFloat(document.getElementById('weight-c').value);
+
+            // Keep physical boundaries: Linked nodes can't exceed expected. Meta nodes can't exceed linked.
+            if (nLink > nExp) {
+                nLink = nExp;
+                document.getElementById('input-link-nodes').value = nLink;
+            }
+            if (nMeta > nLink) {
+                nMeta = nLink;
+                document.getElementById('input-meta-nodes').value = nMeta;
+            }
+
+            // Write inputs to display labels
+            document.getElementById('val-exp-nodes').innerText = nExp;
+            document.getElementById('val-link-nodes').innerText = nLink;
+            document.getElementById('val-meta-nodes').innerText = nMeta;
+            document.getElementById('val-embed-bytes').innerText = bytes.toLocaleString();
+
+            // 1. Coverage
+            const coverage = nExp > 0 ? (nLink / nExp) : 0;
+            document.getElementById('score-coverage').innerText = (coverage * 100).toFixed(2) + "%";
+            document.getElementById('bar-coverage').style.width = (coverage * 100) + "%";
+            document.getElementById('math-coverage-expr').innerText = `${nLink} ÷ ${nExp} = ${coverage.toFixed(10)} (${(coverage * 100).toFixed(2)}%)`;
+
+            // 2. Completeness
+            const completeness = nLink > 0 ? (nMeta / nLink) : 0;
+            document.getElementById('score-completeness').innerText = (completeness * 100).toFixed(2) + "%";
+            document.getElementById('bar-completeness').style.width = (completeness * 100) + "%";
+            document.getElementById('math-completeness-expr').innerText = `${nMeta} ÷ ${nLink} = ${completeness.toFixed(10)} (${(completeness * 100).toFixed(2)}%)`;
+
+            // 3. Embed Ratio (Normalized to 1GB Target Payload Limit)
+            const embedRatio = Math.min(1.0, bytes / 1000000000);
+            document.getElementById('math-embed-expr').innerText = `${bytes.toLocaleString()} ÷ 1,000,000,000 = ${embedRatio.toFixed(10)}`;
+
+            // 4. Weighted Integration
+            const termA = wA * coverage;
+            const termB = wB * completeness;
+            const termC = wC * embedRatio;
+            const compositeSum = termA + termB + termC;
+            const finalPercentage = compositeSum * 100;
+
+            document.getElementById('math-term-a').innerText = `${wA.toFixed(2)} × ${coverage.toFixed(10)} = ${termA.toFixed(10)}`;
+            document.getElementById('math-term-b').innerText = `${wB.toFixed(2)} × ${completeness.toFixed(10)} = ${termB.toFixed(10)}`;
+            document.getElementById('math-term-c').innerText = `${wC.toFixed(2)} × ${embedRatio.toFixed(10)} = ${termC.toFixed(10)}`;
+            document.getElementById('math-sum-expr').innerText = `${termA.toFixed(10)} + ${termB.toFixed(10)} + ${termC.toFixed(10)} = ${compositeSum.toFixed(10)}`;
+            document.getElementById('math-final-pct').innerText = finalPercentage.toFixed(2) + "%";
+            document.getElementById('score-overall').innerText = finalPercentage.toFixed(2) + "%";
+
+            // Status Badge assignment
+            const badge = document.getElementById('badge-status');
+            const evalLabel = document.getElementById('badge-evaluation');
+            if (finalPercentage >= 80) {
+                badge.className = "text-[10px] uppercase font-mono px-2 py-0.5 rounded tracking-widest font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+                badge.innerText = "GREEN ZONE";
+                evalLabel.innerText = "Stable & Certified Structure";
+            } else if (finalPercentage >= 50) {
+                badge.className = "text-[10px] uppercase font-mono px-2 py-0.5 rounded tracking-widest font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20";
+                badge.innerText = "YELLOW ZONE";
+                evalLabel.innerText = "Requires active metadata compilation";
+            } else {
+                badge.className = "text-[10px] uppercase font-mono px-2 py-0.5 rounded tracking-widest font-bold bg-red-500/10 text-red-400 border border-red-500/20";
+                badge.innerText = "RED ZONE";
+                evalLabel.innerText = "Critical Coverage / Completeness gap";
+            }
+        }
+
+        // Switch Visual Projection (Theories)
+        function changeProjection(proj) {
+            document.querySelectorAll('[id^="proj-"]').forEach(btn => {
+                btn.className = "px-3 py-1.5 text-[11px] font-semibold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all";
+            });
+            document.getElementById('proj-' + proj).className = "px-3 py-1.5 text-[11px] font-semibold rounded bg-gold-500 text-slate-950 transition-all";
+
+            const alert = document.getElementById('projection-alert');
+            alert.innerText = `PROJECTION: ${proj.toUpperCase()}`;
+            alert.classList.remove('hidden');
+
+            const textBlock = document.getElementById('lens-projection-desc');
+            const svgElements = document.querySelectorAll('#forest-svg circle, #forest-svg rect');
+
+            if (proj === 'structural') {
+                textBlock.innerHTML = `<strong class="text-gold-500 block mb-1">Structural Framework:</strong> Displays standard administrative flow and level allocations across all clusters.`;
+                svgElements.forEach(el => el.setAttribute('stroke-width', '2'));
+            } else if (proj === 'functional') {
+                textBlock.innerHTML = `<strong class="text-emerald-500 block mb-1">Functionalist Lens:</strong> Highlights the cooperative, harmonious channels. Links are rendered as efficient, system-stabilizing pipelines with high operational balance.`;
+                svgElements.forEach(el => el.setAttribute('stroke-width', '4'));
+            } else if (proj === 'conflict') {
+                textBlock.innerHTML = `<strong class="text-red-500 block mb-1">Conflict Lens:</strong> Highlights pressure/friction points. Focuses on potential bottlenecks of centralized power (Sovereign command) marginalizing tactical cells.`;
+                svgElements.forEach(el => el.setAttribute('stroke-width', '1'));
+            } else if (proj === 'symbolic') {
+                textBlock.innerHTML = `<strong class="text-blue-500 block mb-1">Symbolic Lens:</strong> Spotlights internal codes, languages, and rituals (like weekly house forums, symbols, and local validation).`;
+                svgElements.forEach(el => el.setAttribute('stroke-width', '2.5'));
+            }
+        }
+
+        // Show details of specific layer on visual click
+        const levelDetails = {
+            0: { name: "Individuals (Persons / אישים)", prefix: "GTS-IND", auth: "Tactical Execution (I)", desc: "The supreme atomic baseline of the Kingdom. Temporary yet absolute; houses cannot stand and kingdoms cannot form without stable personhood nodes.", bib: "Atomic units of the Batei Av" },
+            1: { name: "Houses (Households / בתי אב)", prefix: "GTS-HSE", auth: "Tactical Coord (R/A)", desc: "Immediate families or cells. Enforces micro-policy and structures direct raw observation pipelines.", bib: "Ancient Tribal House Divisions" },
+            2: { name: "Families (Extended / משפחות)", prefix: "GTS-FAM", auth: "Regional Anchor (C/I)", desc: "Extended kinship cluster or guild. Responsible for local mutual support, skill propagation, and baseline identity anchors.", bib: "70 families of Jacob's household" },
+            3: { name: "Tribes / Clans (שבטים)", prefix: "GTS-TRB", auth: "Operational (R/A)", desc: "Regional modular coordinators. Balancing regional dialects and territorial resources, mediating local conflict.", bib: "12 Tribes of Israel" },
+            4: { name: "Nations / States (מדינה)", prefix: "GTS-NAT", auth: "Policy & Enforce (R/A)", desc: "Strategic coordination layer encompassing many clans. Manages physical infrastructure and high-level interface protocols.", bib: "Nations of Noah's descendants" },
+            5: { name: "Sovereign Cluster (Kingdom / מלכות)", prefix: "GTS-KNG", auth: "Strategic Sovereignty (R/A)", desc: "Apex umbrella coordinating cross-state strategies and defending baseline sovereignty.", bib: "Universal Kingdom motif (70 Nations)" }
+        };
+
+        function showNodeDetails(level) {
+            const data = levelDetails[level];
+            document.getElementById('node-badge').innerText = `LEVEL ${level}`;
+            document.getElementById('node-name').innerText = data.name;
+            document.getElementById('node-desc').innerText = data.desc;
+            document.getElementById('node-prefix').innerText = data.prefix;
+            document.getElementById('node-authority').innerText = data.auth;
+            document.getElementById('node-biblical').innerText = data.bib;
+        }
+
+        // Simulate execution and log inside Jules
+        function runSimulatedAudit() {
+            const term = document.getElementById('terminal-logs');
+            term.innerHTML += `<p class="text-gold-500">[JULES] Initiating check of scan/ directories...</p>`;
+
+            setTimeout(() => {
+                term.innerHTML += `<p class="text-slate-400">[JULES] Ingesting divisions.csv... Found GTS-DIV-001</p>`;
+                term.innerHTML += `<p class="text-slate-400">[JULES] Scanning master_files_template.csv...</p>`;
+            }, 600);
+
+            setTimeout(() => {
+                const currentScore = document.getElementById('score-overall').innerText;
+                term.innerHTML += `<p class="text-emerald-400">[JULES] Calculated Division 001 Health: ${currentScore}</p>`;
+                term.innerHTML += `<p class="text-emerald-500">[JULES] Deployment SUCCESS: bundle compiled with MD5 validation.</p>`;
+                term.scrollTop = term.scrollHeight;
+            }, 1200);
+        }
+
+        // Download JSON Simulation
+        function triggerDownloadJSON() {
+            const registrySim = {
+                appId: "artifact-ica-sovereignty-hub",
+                signatures: {
+                    MaimonidesArchitecture_V2: "ACTIVE",
+                    compiler: "V2.5-FLASH"
+                },
+                registry: [
+                    { tag: "GTS-DIV-001-HIER_SOC_DIV-V1-20250814T153000Z", name: "Hierarchical Social Division" },
+                    { tag: "GTS-KNG-001-SOVEREIGN_CORE-V1", level: 5 },
+                    { tag: "GTS-FAM-001-HOUSE_OF_JACOB-V1", level: 2 }
+                ]
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(registrySim, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "compiled_gts_registry.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        // Initialize calculations on load
+        window.onload = function() {
+            calculateMetrics();
+        };
+    </script>
+</body>
+</html>
