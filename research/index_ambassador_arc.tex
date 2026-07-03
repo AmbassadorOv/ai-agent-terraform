@@ -1,0 +1,22 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[paper=a4paper,margin=2.5cm]{geometry}
+\begin{document}
+
+\section*{אינדקס קורנל השגריר (Ambassador Arc Kernel)}
+\textbf{מזהה מערכת}: ARC-SHAGRIR-V2 \\
+\textbf{רמת אבטחה}: BRST GATE LOCKED
+
+\subsection*{תיאור מבני}
+מערך זה מגדיר את אופן העברת המידע הדטרמיניסטי מליבת יוליוס (Julius Citadel) אל ממשק השגריר החיצוני, תוך שמירה על עקרונות חסימת אנטרופיה.
+
+\subsection*{רכיבי קורנל השגריר והייעוץ}
+\begin{itemize}
+  \item \textbf{AmbassadorArcKernel} - מנוע הבקרה הראשי המוודא כי אנטרופיית המערכת עומדת על 0.0.
+  \item \textbf{Advisory Parameters} - הגדרת חוקי הקונסנזוס עבור הג'וזפים (Joseph Nodes) למניעת הטיות הסתברותיות.
+  \item \textbf{CitadelAdvisoryKernel} - קורנל פנימי לייצור הנחיות דטרמיניסטיות מבוססות חתימה לוגית.
+\end{itemize}
+
+\subsection*{הנחיות אינטגרציה}
+כל שינוי במבנה השילוט או ה-Ledger מחייב הרצה של ה-Workflow המוגדר ב-GitHub Actions לעדכון מחדש של ה-Artifacts.
+\end{document}
