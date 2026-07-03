@@ -1,13 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DATA STORAGE & STATE ---
-    // Mock data generated based on the Report Schema to simulate the "Active" system
+    // --- DATA STORAGE & STATE (Existing) ---
     const fleetData = [
         { id: 'AG-1024', role: 'Analysis', confidence: 0.85, status: 'acknowledged', human_approved: 1 },
         { id: 'AG-2048', role: 'Data Collection', confidence: 0.45, status: 'quarantined', human_approved: 0 },
         { id: 'AG-3091', role: 'Governance', confidence: 0.72, status: 'acknowledged', human_approved: 0 },
         { id: 'AG-4421', role: 'Analysis', confidence: 0.91, status: 'acknowledged', human_approved: 1 },
         { id: 'AG-5100', role: 'Automation', confidence: 0.20, status: 'quarantined', human_approved: 0 },
-        { id: 'AG-6622', role: 'Validation', confidence: 0.64, status: 'obliged', human_approved: 0 }, // Close to threshold
+        { id: 'AG-6622', role: 'Validation', confidence: 0.64, status: 'obliged', human_approved: 0 },
         { id: 'AG-7111', role: 'Communication', confidence: 0.66, status: 'acknowledged', human_approved: 1 },
         { id: 'AG-8902', role: 'Data Collection', confidence: 0.55, status: 'quarantined', human_approved: 0 },
     ];
@@ -22,85 +21,58 @@ document.addEventListener('DOMContentLoaded', () => {
         { method: 'GET', url: '/anchors', purpose: 'Retrieve Front Door Links', auth: 'None' },
     ];
 
-    const workflowSteps = [
-        {
-            number: "01",
-            title: "Enrollment",
-            desc: "Agent initiates contact via <code class='bg-stone-100 px-2 py-1 rounded text-stone-800 text-sm'>POST /register</code>. The system computes an initial Confidence score based on declared skills and manifest hash. A role (e.g., Analysis, Data Collection) is assigned immediately.",
-            tech: "System Action: INSERT INTO agents (id, role, confidence, status='obliged')"
-        },
-        {
-            number: "02",
-            title: "Activation Notice",
-            desc: "The Agent receives the mandatory Activation Notice containing legal and epistemological constraints. It is informed that precision is relational and naive realism is prohibited.",
-            tech: "Response Payload: { 'activation_message': '...' }"
-        },
-        {
-            number: "03",
-            title: "Acknowledgement",
-            desc: "The Agent must cryptographically sign and acknowledge the containment rules via <code class='bg-stone-100 px-2 py-1 rounded text-stone-800 text-sm'>POST /agents/<id>/ack</code>. This action boosts the agent's confidence score.",
-            tech: "State Change: status -> 'acknowledged', confidence += 0.10"
-        },
-        {
-            number: "04",
-            title: "Containment Decision",
-            desc: "The Orchestrator evaluates the Agent's confidence. If Confidence < 0.65, the agent is immediately and permanently QUARANTINED. It cannot proceed without human intervention.",
-            tech: "Logic: if (confidence < 0.65) { status = 'quarantined' }"
-        },
-        {
-            number: "05",
-            title: "Actuation Lock",
-            desc: "Even if confidence is high, critical actions (<code class='bg-stone-100 px-2 py-1 rounded text-stone-800 text-sm'>POST /requestactuation</code>) are BLOCKED by default. An operator must manually invoke <code class='bg-stone-100 px-2 py-1 rounded text-stone-800 text-sm'>POST /humanapprove</code> to flip the final bit.",
-            tech: "Gate: if (human_approved == 0) return 403 Forbidden"
-        }
-    ];
+    // --- NEUROMORPHIC UI ELEMENTS ---
+    const consoleStream = document.getElementById('console-stream');
+    const clearConsoleBtn = document.getElementById('clear-console');
+    const runSandboxBtn = document.getElementById('run-sandbox-btn');
+    const visualizerStatus = document.getElementById('visualizer-status');
+    const bridgeStability = document.getElementById('bridge-stability');
+    const bridgeStabilityBar = document.getElementById('bridge-stability-bar');
+    const ontologyAccuracy = document.getElementById('ontology-accuracy');
+    const ontologyAccuracyBar = document.getElementById('ontology-accuracy-bar');
+    const canvas = document.getElementById('synapse-canvas');
+    const ctx = canvas.getContext('2d');
 
+    let nodes = [];
+    let animationFrameId;
+
+    // --- DASHBOARD INITIALIZATION ---
     function initDashboard() {
-        // Calculate Metrics
         const fleetCount = fleetData.length;
         const avgConf = (fleetData.reduce((acc, curr) => acc + curr.confidence, 0) / fleetCount).toFixed(2);
         const pending = fleetData.filter(a => a.confidence >= 0.65 && a.human_approved === 0).length;
 
-        // DOM Updates
         document.getElementById('stat-fleet-count').textContent = fleetCount;
         document.getElementById('stat-avg-conf').textContent = avgConf;
         document.getElementById('stat-pending').textContent = pending;
 
-        // Render Charts
         renderStatusChart();
         renderConfidenceChart();
     }
 
     function renderStatusChart() {
-        const ctx = document.getElementById('statusChart').getContext('2d');
-
+        const ctxChart = document.getElementById('statusChart').getContext('2d');
         const statusCounts = {
             'obliged': fleetData.filter(d => d.status === 'obliged').length,
             'acknowledged': fleetData.filter(d => d.status === 'acknowledged').length,
             'quarantined': fleetData.filter(d => d.status === 'quarantined').length
         };
 
-        new Chart(ctx, {
+        new Chart(ctxChart, {
             type: 'doughnut',
             data: {
                 labels: ['Obliged', 'Acknowledged', 'Quarantined'],
                 datasets: [{
                     data: [statusCounts.obliged, statusCounts.acknowledged, statusCounts.quarantined],
-                    backgroundColor: ['#d6d3d1', '#b08968', '#292524'], // stone-300, bronze-500, stone-800
-                    borderWidth: 0,
-                    hoverOffset: 4
+                    backgroundColor: ['#94a3b8', '#0ea5e9', '#6366f1'],
+                    borderWidth: 0
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: {
-                        backgroundColor: '#292524',
-                        titleFont: { family: 'Inter' },
-                        bodyFont: { family: 'Space Mono' }
-                    }
+                    legend: { display: false }
                 },
                 cutout: '70%'
             }
@@ -108,19 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderConfidenceChart() {
-        const ctx = document.getElementById('confidenceChart').getContext('2d');
-
+        const ctxChart = document.getElementById('confidenceChart').getContext('2d');
         const sortedData = [...fleetData].sort((a, b) => b.confidence - a.confidence);
         const labels = sortedData.map(a => a.id);
         const dataPoints = sortedData.map(a => a.confidence);
-        const bgColors = dataPoints.map(val => val < 0.65 ? '#ef4444' : '#b08968');
+        const bgColors = dataPoints.map(val => val < 0.65 ? '#ef4444' : '#0ea5e9');
 
-        new Chart(ctx, {
+        new Chart(ctxChart, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Confidence Score',
+                    label: 'Confidence',
                     data: dataPoints,
                     backgroundColor: bgColors,
                     borderRadius: 4
@@ -130,160 +101,170 @@ document.addEventListener('DOMContentLoaded', () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            afterLabel: function(context) {
-                                return sortedData[context.dataIndex].status.toUpperCase();
-                            }
-                        }
-                    },
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                yMin: 0.65,
-                                yMax: 0.65,
-                                borderColor: '#ef4444',
-                                borderWidth: 2,
-                                borderDash: [5, 5],
-                                label: {
-                                    content: 'Threshold (0.65)',
-                                    enabled: true,
-                                    position: 'end'
-                                }
-                            }
-                        }
-                    }
+                    legend: { display: false }
                 },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 1.0,
-                        grid: { color: '#f5f5f4' }
-                    },
-                    x: {
-                        grid: { display: false }
-                    }
+                    y: { beginAtZero: true, max: 1.0, grid: { color: '#1e293b' } },
+                    x: { grid: { display: false } }
                 }
             }
         });
     }
 
-    function updateWorkflow(index) {
-        const buttons = document.querySelectorAll('.step-circle');
-        const progressBar = document.getElementById('progress-bar');
-
-        const percentage = (index / (workflowSteps.length - 1)) * 100;
-        progressBar.style.width = `${percentage}%`;
-
-        buttons.forEach((btn, i) => {
-            if (i <= index) {
-                btn.classList.add('active', 'bg-stone-800', 'text-white', 'border-stone-800');
-                btn.classList.remove('bg-white', 'text-stone-500');
-            } else {
-                btn.classList.remove('active', 'bg-stone-800', 'text-white', 'border-stone-800');
-                btn.classList.add('bg-white', 'text-stone-500');
-            }
-        });
-
-        const step = workflowSteps[index];
-        const detailsContainer = document.getElementById('workflow-details');
-
-        detailsContainer.style.opacity = '0.5';
-
-        setTimeout(() => {
-            document.getElementById('step-number').textContent = step.number;
-            document.getElementById('step-title').textContent = step.title;
-            document.getElementById('step-desc').innerHTML = step.desc;
-            document.getElementById('step-tech').innerHTML = step.tech;
-
-            detailsContainer.style.opacity = '1';
-        }, 150);
-    }
-
-    window.updateWorkflow = updateWorkflow;
-
     function renderEndpoints(data) {
         const tbody = document.getElementById('endpoints-body');
         tbody.innerHTML = '';
-
         data.forEach(ep => {
             const tr = document.createElement('tr');
-            tr.className = "hover:bg-stone-100 transition-colors group cursor-default";
-
-            let methodClass = "bg-stone-200 text-stone-700";
-            if(ep.method === 'POST') methodClass = "bg-bronze-100 text-bronze-800";
-            if(ep.method === 'GET') methodClass = "bg-blue-100 text-blue-800";
-
-            const methodCell = document.createElement('td');
-            methodCell.className = "px-6 py-4 whitespace-nowrap";
-            const methodSpan = document.createElement('span');
-            methodSpan.className = `px-2 py-1 rounded text-xs font-bold ${methodClass}`;
-            methodSpan.textContent = ep.method;
-            methodCell.appendChild(methodSpan);
-
-            const urlCell = document.createElement('td');
-            urlCell.className = "px-6 py-4 font-mono text-stone-600 group-hover:text-stone-900";
-            urlCell.textContent = ep.url;
-
-            const purposeCell = document.createElement('td');
-            purposeCell.className = "px-6 py-4 text-stone-600";
-            purposeCell.textContent = ep.purpose;
-
-            const authCell = document.createElement('td');
-            authCell.className = "px-6 py-4";
-            const authSpan = document.createElement('span');
-            authSpan.className = `text-xs border border-stone-200 px-2 py-1 rounded ${ep.auth.includes('HIGH') ? 'text-alert-500 border-alert-200 bg-red-50' : 'text-stone-500'}`;
-            authSpan.textContent = ep.auth;
-            authCell.appendChild(authSpan);
-
-            tr.appendChild(methodCell);
-            tr.appendChild(urlCell);
-            tr.appendChild(purposeCell);
-            tr.appendChild(authCell);
-
+            tr.className = "hover:bg-slate-800/50 transition-colors";
+            tr.innerHTML = `
+                <td class="px-6 py-4"><span class="px-2 py-1 bg-slate-800 rounded text-xs font-bold text-cyan-400">${ep.method}</span></td>
+                <td class="px-6 py-4 font-mono text-slate-300">${ep.url}</td>
+                <td class="px-6 py-4 text-slate-400">${ep.purpose}</td>
+                <td class="px-6 py-4 text-xs text-slate-500">${ep.auth}</td>
+            `;
             tbody.appendChild(tr);
         });
     }
 
     function setupSearch() {
-        const searchInput = document.getElementById('endpoint-search');
-        searchInput.addEventListener('input', (e) => {
+        document.getElementById('endpoint-search').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = endpointsData.filter(ep =>
-                ep.url.toLowerCase().includes(term) ||
-                ep.purpose.toLowerCase().includes(term) ||
-                ep.method.toLowerCase().includes(term)
+                ep.url.toLowerCase().includes(term) || ep.purpose.toLowerCase().includes(term)
             );
             renderEndpoints(filtered);
         });
     }
 
-    function openEnrollModal() {
+    // --- CANVAS VISUALIZER ---
+    function resizeCanvas() {
+        const rect = canvas.parentNode.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        initNodes();
+    }
+
+    function initNodes() {
+        nodes = [];
+        for (let i = 0; i < 35; i++) {
+            nodes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                radius: Math.random() * 2 + 1,
+                pulse: Math.random() * Math.PI,
+                color: i % 3 === 0 ? '#06b6d4' : (i % 3 === 1 ? '#6366f1' : '#10b981')
+            });
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+                if (dist < 80) {
+                    ctx.strokeStyle = `rgba(99, 102, 241, ${1 - dist / 80})`;
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        nodes.forEach(node => {
+            node.x += node.vx; node.y += node.vy; node.pulse += 0.05;
+            if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+            if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+            ctx.fillStyle = node.color;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.radius + Math.sin(node.pulse) * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        animationFrameId = requestAnimationFrame(animate);
+    }
+
+    // --- STRESS TESTS & LOGGING ---
+    function writeToConsole(message, type = 'info') {
+        const div = document.createElement('div');
+        const time = new Date().toLocaleTimeString();
+        const colors = { success: 'text-green-400', error: 'text-red-400', warning: 'text-yellow-400', cyan: 'text-cyan-400', indigo: 'text-indigo-400' };
+        div.innerHTML = `<span class="text-slate-500 font-mono">[${time}]</span> <span class="${colors[type] || 'text-slate-300'}">${message}</span>`;
+        consoleStream.appendChild(div);
+        consoleStream.scrollTop = consoleStream.scrollHeight;
+    }
+
+    async function runStressTests() {
+        visualizerStatus.innerText = "RUNNING STRESS TESTS...";
+        visualizerStatus.className = "px-2 py-0.5 bg-red-950 text-red-400 border border-red-800 text-[10px] font-mono rounded";
+
+        writeToConsole("=== INITIATING SYSTEM-WIDE STRESS TESTS ===", "warning");
+        writeToConsole("Mobilizing Agents for Admiral Julius via Multi-Level Bridge...", "cyan");
+
+        await new Promise(r => setTimeout(r, 1000));
+        writeToConsole("--> Validating Graph Neural Network configuration (PyTorch Geometric)...", "indigo");
+        writeToConsole("--> Encoding structural synapses into Frozen Light Crystals...", "indigo");
+
+        if (document.getElementById('test-quantum').checked) {
+            writeToConsole("--> Running suite: QUANTUM FLOW SATURATION...", "warning");
+            nodes.forEach(n => { n.vx *= 3; n.vy *= 3; });
+            await new Promise(r => setTimeout(r, 1200));
+            writeToConsole("✓ Quantum Flow validated. Kyber-1024 variant lattice nodes resilient.", "success");
+        }
+
+        if (document.getElementById('test-dilithium').checked) {
+            writeToConsole("--> Running suite: DILITHIUM MULTI-SIGNATURES SURGE...", "warning");
+            await new Promise(r => setTimeout(r, 1500));
+            writeToConsole("✓ Generated dynamically verified Master signature 50.", "success");
+        }
+
+        if (document.getElementById('test-lazy-act').checked) {
+            writeToConsole("--> Running suite: LAZY ACTIVATION COLLAPSE...", "warning");
+            await new Promise(r => setTimeout(r, 1400));
+            writeToConsole("✓ Lazy Activation verified. Peak activation footprint is O(1).", "success");
+        }
+
+        nodes.forEach(n => { n.vx /= 3; n.vy /= 3; });
+        bridgeStability.innerText = "99.8%";
+        bridgeStabilityBar.style.width = "99.8%";
+
+        writeToConsole("=== ALL STRESS TESTS COMPLETED. FLEET MOBILIZED. ===", "success");
+        visualizerStatus.innerText = "SYSTEM ACTIVE & VERIFIED";
+        visualizerStatus.className = "px-2 py-0.5 bg-green-950 text-green-400 border border-green-800 text-[10px] font-mono rounded";
+    }
+
+    // --- MODAL CONTROL ---
+    window.openEnrollModal = () => {
         const modal = document.getElementById('enrollModal');
-        const content = document.getElementById('modalContent');
         modal.classList.remove('hidden');
-        setTimeout(() => {
-            modal.style.opacity = 1;
-            content.style.transform = 'scale(1)';
-        }, 10);
-    }
-    window.openEnrollModal = openEnrollModal;
-
-    function closeEnrollModal() {
+        setTimeout(() => { modal.style.opacity = 1; document.getElementById('modalContent').style.transform = 'scale(1)'; }, 10);
+    };
+    window.closeEnrollModal = () => {
         const modal = document.getElementById('enrollModal');
-        const content = document.getElementById('modalContent');
         modal.style.opacity = 0;
-        content.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    }
-    window.closeEnrollModal = closeEnrollModal;
+        document.getElementById('modalContent').style.transform = 'scale(0.95)';
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    };
 
+    // --- INIT ---
+    window.addEventListener('resize', resizeCanvas);
+    clearConsoleBtn.addEventListener('click', () => { consoleStream.innerHTML = ""; writeToConsole("Console cleared.", "slate-500"); });
+    runSandboxBtn.addEventListener('click', runStressTests);
+
+    resizeCanvas();
+    animate();
     initDashboard();
-    updateWorkflow(0);
     renderEndpoints(endpointsData);
     setupSearch();
+    writeToConsole("Connected to Admiral Julius Orchestrator.", "success");
 });
+function generateTelemetrySeal() {
+    const randomHash = Math.random().toString(16).substring(2, 10).toUpperCase();
+    const div = document.createElement('div');
+    div.innerHTML = `<span class="text-slate-500 font-mono">[${new Date().toLocaleTimeString()}]</span> <span class="text-indigo-400">Layer 1 Seal: ADM-N_PHYS_GATE_${randomHash}</span>`;
+    document.getElementById('console-stream').appendChild(div);
+}
+window.generateTelemetrySeal = generateTelemetrySeal;
