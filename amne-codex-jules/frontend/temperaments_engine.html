@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מנוע המזגים הקריפטוגרפי - ICA Sovereignty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            50: '#fdfbf7',
+                            100: '#fbf7ed',
+                            500: '#d4af37',
+                            600: '#c5a028',
+                            700: '#aa820a',
+                        },
+                        slate: {
+                            950: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Noto+Sans+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans Hebrew', sans-serif; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        .glow-gold { box-shadow: 0 0 25px rgba(212, 175, 55, 0.15); }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-gold-500 selection:text-slate-950">
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-4">
+        <h1 class="text-base md:text-lg font-bold tracking-tight text-white">מנוע המזגים הקריפטוגרפי</h1>
+    </header>
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+        <section id="view-temperaments" class="space-y-6">
+            <div id="temperaments-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </section>
+    </main>
+    <script>
+        lucide.createIcons();
+        const temperaments = [{ id: 1, letter: "א", trans: "ALEPH", brain: "חזק", heart: "חזק", liver: "חזק", level: "L5", desc: "המזג השלם" }];
+        const grid = document.getElementById('temperaments-grid');
+        temperaments.forEach(t => {
+            const card = document.createElement('div');
+            card.className = "bg-slate-900 border border-slate-800 p-4 rounded-lg";
+            card.innerHTML = `<h3 class="text-gold-500">${t.letter} - ${t.trans}</h3><p>${t.desc}</p>`;
+            grid.appendChild(card);
+        });
+    </script>
+</body>
+</html>
