@@ -1,0 +1,90 @@
+{
+  "request": {
+    "recipient": "Julius",
+    "action": "initialize_university_tags",
+    "timestamp": "2026-07-03T20:12:00+03:00"
+  },
+  "payload": {
+    "domain": "Frontend Development",
+    "categories": [
+      {
+        "tag_id": "ARCH_001",
+        "name_he": "ארכיטקטורה ותשתיות",
+        "name_en": "Architecture & Frameworks",
+        "sub_tags": [
+          "Micro-Frontends",
+          "SSR_SSG",
+          "React_Server_Components",
+          "Modern_Frameworks_Qwik_Solid_Astro"
+        ]
+      },
+      {
+        "tag_id": "PERF_002",
+        "name_he": "ביצועים",
+        "name_en": "Performance",
+        "sub_tags": [
+          "Core_Web_Vitals",
+          "WebAssembly_WASM",
+          "Off_Main_Thread",
+          "Memory_Management"
+        ]
+      },
+      {
+        "tag_id": "STATE_003",
+        "name_he": "ניהול מצב",
+        "name_en": "State Management",
+        "sub_tags": [
+          "Signals",
+          "Modern_State_Libraries",
+          "Server_vs_Client_State"
+        ]
+      },
+      {
+        "tag_id": "BUILD_004",
+        "name_he": "כלים ותהליכי בנייה",
+        "name_en": "Build Tools & Tooling",
+        "sub_tags": [
+          "Modern_Bundlers_Vite_Turbopack",
+          "Monorepo_Management"
+        ]
+      },
+      {
+        "tag_id": "UI_005",
+        "name_he": "עיצוב וממשק משתמש",
+        "name_en": "Styling & UI",
+        "sub_tags": [
+          "CSS_Architecture",
+          "Design_Systems_Headless_UI",
+          "Complex_Animations"
+        ]
+      },
+      {
+        "tag_id": "QA_006",
+        "name_he": "בדיקות ואבטחת איכות",
+        "name_en": "Testing & QA",
+        "sub_tags": [
+          "E2E_Testing",
+          "Unit_Integration_Tests"
+        ]
+      },
+      {
+        "tag_id": "A11Y_007",
+        "name_he": "נגישות ובינלאומיות",
+        "name_en": "a11y & i18n",
+        "sub_tags": [
+          "Accessibility_WCAG",
+          "Internationalization_RTL"
+        ]
+      },
+      {
+        "tag_id": "AI_008",
+        "name_he": "חדשנות ושילובי AI",
+        "name_en": "Innovation & AI Integration",
+        "sub_tags": [
+          "AI_on_Edge_Browser",
+          "Generative_UI"
+        ]
+      }
+    ]
+  }
+}

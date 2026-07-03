@@ -1,0 +1,19 @@
+% compile_instructions.tex
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+\section*{הוראות קומפילציה ושימוש}
+\begin{enumerate}
+  \item שמרו את כל הקבצים בתיקייה אחת.
+  \item קומפלו כל קובץ בנפרד בעזרת pdflatex או xelatex:
+    \begin{verbatim}
+    xelatex master_index.tex
+    xelatex index_prompt_generator.tex
+    ...
+    \end{verbatim}
+  \item השתמשו ב-hyperref כדי לנווט בין הקבצים לאחר המרתם ל-PDF.
+  \item להמרה אוטומטית מ-JSON ל-LaTeX כתבו סקריפט Python שמחליף תגים.
+\end{enumerate}
+
+\end{document}
