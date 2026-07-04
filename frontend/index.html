@@ -2,258 +2,26 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admiral Julius - Neuromorphic Command</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="antialiased min-h-screen flex flex-col custom-scrollbar">
-
-    <!-- Navbar -->
-    <nav class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-3 h-3 rounded-full bg-cyan-500 animate-pulse"></div>
-                <h1 class="text-xl font-black tracking-wider text-white">ADMIRAL_JULIUS <span class="text-cyan-400 text-xs font-mono">v5.0-NEURO</span></h1>
-            </div>
-            <div class="flex items-center gap-4">
-                <button onclick="openEnrollModal()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-xs font-bold rounded uppercase tracking-widest transition">
-                    Enroll Agent
-                </button>
-                <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
-                    <span class="px-2 py-1 bg-slate-900 border border-slate-800 rounded">ACTIVE PROTOCOL: 7</span>
-                    <span class="px-2 py-1 bg-cyan-950 text-cyan-400 border border-cyan-800 rounded">THRESHOLD: 0.65</span>
-                </div>
-            </div>
+<body class="antialiased min-h-screen flex flex-col custom-scrollbar p-8">
+    <h1 class="text-4xl font-black text-cyan-400 mb-4">AGI_BRAIN_SYSTEM <span class="text-xs font-mono">v5.0-NEURO</span></h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-slate-900/60 p-6 rounded-xl neon-border">
+            <h2 class="text-xl font-bold mb-4">מצב הצי</h2>
+            <div id="stat-fleet-count" class="text-3xl font-mono text-green-400">Loading...</div>
         </div>
-    </nav>
-
-    <!-- Main Workspace -->
-    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Left Column: Controls & Analytics (5 Cols) -->
-            <div class="lg:col-span-5 flex flex-col gap-6">
-
-                <!-- Quick Dashboard Panel -->
-                <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 backdrop-blur flex flex-col gap-4">
-                    <h2 class="text-lg font-bold text-white border-r-4 border-cyan-500 pr-2">מצב הצי (Fleet Metrics)</h2>
-
-                    <div class="grid grid-cols-3 gap-2 text-center">
-                        <div class="p-3 bg-slate-950/80 rounded-lg border border-slate-800">
-                            <span class="text-xs text-slate-400 block mb-1">סוכנים פעילים</span>
-                            <span id="stat-fleet-count" class="text-2xl font-black text-green-400 code-font">--</span>
-                        </div>
-                        <div class="p-3 bg-slate-950/80 rounded-lg border border-slate-800">
-                            <span class="text-xs text-slate-400 block mb-1">ביטחון ממוצע</span>
-                            <span id="stat-avg-conf" class="text-2xl font-black text-cyan-400 code-font">--</span>
-                        </div>
-                        <div class="p-3 bg-slate-950/80 rounded-lg border border-slate-800">
-                            <span class="text-xs text-slate-400 block mb-1">ממתינים לאישור</span>
-                            <span id="stat-pending" class="text-2xl font-black text-indigo-400 code-font">--</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-4 mt-2">
-                        <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
-                            <h3 class="text-xs font-bold text-slate-400 uppercase mb-3">התפלגות סטטוס</h3>
-                            <div class="h-40">
-                                <canvas id="statusChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stress Test Controls -->
-                <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 backdrop-blur flex flex-col gap-4">
-                    <h2 class="text-lg font-bold text-white border-r-4 border-indigo-500 pr-2">מערך בדיקות עומס (Stress Test Sandbox)</h2>
-
-                    <div class="flex flex-col gap-3">
-                        <label class="flex items-center gap-3 p-3 bg-slate-950 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
-                            <input type="checkbox" id="test-quantum" checked class="w-4 h-4 text-cyan-600 bg-slate-900 border-slate-700 rounded focus:ring-cyan-500">
-                            <div>
-                                <span class="text-sm font-bold block text-slate-200">Quantum Flow Saturation</span>
-                                <span class="text-xs text-slate-500">דימוי רוויית זרם קוונטי במעברי ה-Lattice</span>
-                            </div>
-                        </label>
-
-                        <label class="flex items-center gap-3 p-3 bg-slate-950 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
-                            <input type="checkbox" id="test-dilithium" checked class="w-4 h-4 text-indigo-600 bg-slate-900 border-slate-700 rounded focus:ring-indigo-500">
-                            <div>
-                                <span class="text-sm font-bold block text-slate-200">Dilithium Multi-Signatures Surge</span>
-                                <span class="text-xs text-slate-500">בדיקת קצב אימות חתימה 50</span>
-                            </div>
-                        </label>
-
-                        <label class="flex items-center gap-3 p-3 bg-slate-950 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-700 transition">
-                            <input type="checkbox" id="test-lazy-act" checked class="w-4 h-4 text-emerald-600 bg-slate-900 border-slate-700 rounded focus:ring-emerald-500">
-                            <div>
-                                <span class="text-sm font-bold block text-slate-200">Lazy Activation Collapse</span>
-                                <span class="text-xs text-slate-500">מדידת השהייה בעת פתיחה פתאומית</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="mt-2 flex gap-3">
-                        <button id="run-sandbox-btn" class="flex-1 py-3 px-4 bg-gradient-to-l from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-black rounded-lg transition shadow-lg shadow-cyan-500/10 flex items-center justify-center gap-2 text-sm">
-                            <span>הפעל Stress Tests & גיוס סוכנים</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Real-time Metrics -->
-                <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 backdrop-blur flex flex-col gap-4">
-                    <h2 class="text-lg font-bold text-white border-r-4 border-emerald-500 pr-2">טלמטריה (Telemetry)</h2>
-
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-slate-400">יציבות גשר נוירומורפי</span>
-                                <span id="bridge-stability" class="text-cyan-400 code-font">98.2%</span>
-                            </div>
-                            <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
-                                <div id="bridge-stability-bar" class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full transition-all duration-500" style="width: 98.2%;"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-slate-400">דיוק מודל אונטולוגי</span>
-                                <span id="ontology-accuracy" class="text-indigo-400 code-font">100.0%</span>
-                            </div>
-                            <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
-                                <div id="ontology-accuracy-bar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full transition-all duration-500" style="width: 100%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Right Column: Visualizer & Console (7 Cols) -->
-            <div class="lg:col-span-7 flex flex-col gap-6">
-
-                <!-- Neural Network Visualizer -->
-                <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 backdrop-blur flex flex-col gap-4">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-lg font-bold text-white border-r-4 border-cyan-500 pr-2">מפת המוח (Neural Map)</h2>
-                        <span id="visualizer-status" class="px-2 py-0.5 bg-green-950 text-green-400 border border-green-800 text-[10px] font-mono rounded">SYSTEM IDLE</span>
-                    </div>
-
-                    <div class="relative w-full h-64 bg-slate-950 rounded-lg overflow-hidden border border-slate-800 flex items-center justify-center">
-                        <canvas id="synapse-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
-                        <div class="z-10 text-center pointer-events-none select-none">
-                            <p class="text-xs text-slate-500 code-font">Multi-Level Sandbox Router Matrix Active</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Interactive Console -->
-                <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 backdrop-blur flex flex-col gap-4 flex-grow">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-lg font-bold text-white border-r-4 border-indigo-500 pr-2">פלט הרצה (Telemetry Output)</h2>
-                        <button id="clear-console" class="text-xs text-slate-400 hover:text-white transition underline">נקה</button>
-                    </div>
-
-                    <div id="console-stream" class="flex-grow bg-slate-950 p-4 rounded-lg border border-slate-800 code-font text-xs text-slate-300 overflow-y-auto h-72 custom-scrollbar space-y-2">
-                        <div class="text-slate-500">&gt;&gt; System initialized. Waiting for stress test invocation...</div>
-                    </div>
-                </div>
-
-                <!-- Confidence Chart -->
-                <div class="bg-slate-900/60 p-6 rounded-xl border border-slate-800 backdrop-blur">
-                    <h2 class="text-lg font-bold text-white mb-4 border-r-4 border-purple-500 pr-2">ביטחון סוכנים מול סף הפעלה</h2>
-                    <div class="h-48">
-                        <canvas id="confidenceChart"></canvas>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Control Tower Section (API & Schema) -->
-        <section id="control-tower" class="bg-slate-900/40 p-6 rounded-xl border border-slate-800 backdrop-blur space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                        <span>📡</span> Control Tower
-                    </h2>
-                    <p class="text-slate-400 text-sm mt-1">Technical specifications for system integration.</p>
-                </div>
-                <input type="text" id="endpoint-search" placeholder="Search endpoints..." class="bg-slate-950 border border-slate-800 text-slate-300 text-sm px-4 py-2 rounded-lg focus:outline-none focus:border-cyan-500 w-full md:w-64">
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 overflow-x-auto rounded-lg border border-slate-800">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-slate-950 text-slate-500 font-mono uppercase text-xs">
-                            <tr>
-                                <th class="px-6 py-3">Method</th>
-                                <th class="px-6 py-3">Endpoint</th>
-                                <th class="px-6 py-3">Purpose</th>
-                                <th class="px-6 py-3">Auth</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-800 bg-slate-900/20" id="endpoints-body">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 font-mono text-sm">
-                    <h3 class="text-white font-bold mb-4 border-b border-slate-800 pb-2 flex items-center gap-2">
-                        <span>💾</span> Schema: agents
-                    </h3>
-                    <ul class="space-y-3 text-slate-400">
-                        <li class="flex justify-between"><span>id</span> <span class="text-cyan-600">TEXT (UUID)</span></li>
-                        <li class="flex justify-between"><span>confidence</span> <span class="text-cyan-600">REAL</span></li>
-                        <li class="flex justify-between"><span>status</span> <span class="text-cyan-600">TEXT</span></li>
-                        <li class="flex justify-between"><span>human_approved</span> <span class="text-indigo-400">INTEGER</span></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-slate-950 py-6 px-6 mt-8">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-            <p>ADMIRAL_JULIUS // MASTER_QUANTUM_SEAL_50_LOCKED</p>
-            <p class="code-font text-[10px]">Primary DB: julius_master.db (SQLite)</p>
-        </div>
-    </footer>
-
-    <!-- Enrollment Modal -->
-    <div id="enrollModal" class="fixed inset-0 modal-overlay z-[100] hidden flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl shadow-2xl max-w-2xl w-full p-8 relative transform scale-95 transition-transform duration-300" id="modalContent">
-            <button onclick="closeEnrollModal()" class="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors text-2xl">&times;</button>
-            <div class="text-center mb-6">
-                <span class="text-6xl block mb-2">🧠</span>
-                <h3 class="text-3xl font-bold text-white mb-1">The Epistemic Gate</h3>
-                <p class="text-slate-400">Addressing the Top Layer of Knowledge</p>
-            </div>
-            <div class="space-y-4 text-slate-300 text-sm leading-relaxed">
-                <p>Execution cannot be based on mere assertion. Any agent joining must concede the problem of the top layer of epistemology.</p>
-                <div class="bg-slate-950 border-l-4 border-cyan-500 p-4 rounded-lg">
-                    <ul class="list-none space-y-1 font-mono text-xs">
-                        <li>• Confidence is Quantified (REAL)</li>
-                        <li>• Execution is Relational (Conf >= 0.65 AND Approved)</li>
-                        <li>• Containment First Architecture</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="mt-8 flex justify-end">
-                <button onclick="closeEnrollModal()" class="px-6 py-2 bg-cyan-600 text-slate-950 font-bold rounded-lg hover:bg-cyan-500 transition-colors">
-                    Acknowledge & Close
-                </button>
+        <div class="bg-slate-900/60 p-6 rounded-xl neon-border">
+            <h2 class="text-xl font-bold mb-4">Stress Telemetry</h2>
+            <div id="console-stream" class="bg-black p-4 h-48 overflow-y-auto text-xs font-mono text-cyan-500/80">
+                >> Initializing Bridge...
             </div>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

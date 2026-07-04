@@ -1,55 +1,6 @@
-body {
-    font-family: 'Heebo', sans-serif;
-    background-color: #020617;
-    color: #f8fafc;
-}
-.code-font {
-    font-family: 'Fira Code', monospace;
-}
-.neon-border-cyan {
-    border: 1px solid rgba(6, 182, 212, 0.4);
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
-}
-.neon-border-indigo {
-    border: 1px solid rgba(99, 102, 241, 0.4);
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
-}
-.custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: #0b1329;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #1e293b;
-    border-radius: 3px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #334155;
-}
-
-/* Existing styles adapted for the new theme if necessary */
-.chart-container {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    height: 300px;
-    max-height: 400px;
-}
-
-@media (min-width: 768px) {
-    .chart-container {
-        height: 350px;
-    }
-}
-
-.modal-overlay {
-    background-color: rgba(2, 6, 23, 0.9); /* Darker for the new theme */
-}
-
-/* Ensure Chart.js labels are visible on dark background */
-canvas {
-    filter: invert(0);
-}
+body { font-family: 'Heebo', sans-serif; background-color: #020617; color: #f8fafc; direction: rtl; }
+.code-font { font-family: 'Fira Code', monospace; }
+.neon-border { border: 1px solid rgba(6, 182, 212, 0.4); box-shadow: 0 0 15px rgba(6, 182, 212, 0.15); }
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: #0b1329; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
