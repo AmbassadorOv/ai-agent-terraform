@@ -1,0 +1,4 @@
+## 2025-05-14 - EOL Lambda Runtimes in Infrastructure
+**Vulnerability:** AWS Lambda functions were configured to use the `nodejs14.x` runtime, which has been end-of-life (EOL) since April 2023. EOL runtimes do not receive security patches, exposing the functions to unmitigated vulnerabilities in the Node.js core.
+**Learning:** Legacy infrastructure code in `environments/swarms-aws-agent-api/` uses pseudo-code and outdated templates that haven't been audited for runtime currency. Structural issues (like duplicate resource names) in these files can mask security fixes if not addressed during the validation process.
+**Prevention:** Implement a regular audit of Lambda runtimes against the AWS supported runtimes list. Use `terraform validate` (if the file is syntactically correct) or automated linters like `tflint` to catch deprecated runtimes early. Always verify structural integrity when applying security patches to older infrastructure files.
