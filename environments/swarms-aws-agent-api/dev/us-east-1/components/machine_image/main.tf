@@ -21,6 +21,16 @@ resource "aws_instance" "fastapi_server_test_instance" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
 
+  # Enforce IMDSv2 to mitigate SSRF risks
+  metadata_options {
+    http_tokens = "required"
+  }
+
+  # Enable encryption for the root block device
+  root_block_device {
+    encrypted = true
+  }
+
   # add in this user data
   tags = {
     Name = "FastAPI Server"

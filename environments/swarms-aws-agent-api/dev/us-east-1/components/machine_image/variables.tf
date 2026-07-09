@@ -1,3 +1,5 @@
-variable test_server_count {
-  value = 1 # how many test servers to run
+variable "test_server_count" {
+  description = "Number of test servers to run"
+  type        = number
+  default     = 1
 }
