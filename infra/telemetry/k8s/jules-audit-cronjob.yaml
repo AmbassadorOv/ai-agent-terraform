@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: jules-audit-canary
+  namespace: infra
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: jules-audit-sa
+          containers:
+          - name: jules-audit
+            image: python:3.11-slim
+            command: ["python","/opt/jules/infra/telemetry/jules_audit.py","--input","/data/telemetry.csv","--dry-run","--canary"]
+            volumeMounts:
+            - name: scripts
+              mountPath: /opt/jules
+            - name: telemetry
+              mountPath: /data
+          restartPolicy: OnFailure
+          volumes:
+          - name: scripts
+            configMap:
+              name: jules-audit-scripts
+          - name: telemetry
+            hostPath:
+              path: /var/lib/telemetry
+              type: Directory

@@ -1,0 +1,20 @@
+name: Telemetry Audit CI
+on:
+  pull_request:
+    paths:
+      - 'infra/telemetry/'
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r infra/telemetry/requirements.txt
+      - name: Run dry-run audit on sample
+        run: python infra/telemetry/jules_audit.py --input infra/telemetry/sample_telemetry.csv --dry-run
