@@ -17,9 +17,19 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "fastapi_server_test_instance" {
-  count = var.test_server_count
+  count         = var.test_server_count
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
+
+  # Security: Enforce IMDSv2 to prevent credential theft via SSRF
+  metadata_options {
+    http_tokens = "required"
+  }
+
+  # Security: Ensure data at rest is encrypted
+  root_block_device {
+    encrypted = true
+  }
 
   # add in this user data
   tags = {
