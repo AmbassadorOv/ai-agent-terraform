@@ -1,0 +1,6 @@
+# Sentinel Security Journal
+
+## 2026-06-30 - Enforce IMDSv2 and Root Block Device Encryption on EC2 instances
+**Vulnerability:** The AWS EC2 test instance config in `environments/swarms-aws-agent-api/dev/us-east-1/components/machine_image/main.tf` was configured with default metadata options and unencrypted root volumes, exposing the infrastructure to Instance Metadata Service version 1 (IMDSv1) SSRF-based credential extraction attacks and leaving persistent block storage unencrypted.
+**Learning:** Legacy configurations often omit critical security mechanisms like IMDSv2 and block storage encryption. Under default settings (IMDSv1), server-side request forgery (SSRF) vulnerabilities can be escalated to full AWS administrative takeover if an attacker can retrieve IAM instance profile credentials through the metadata service. Enforcing IMDSv2 prevents this by requiring a session token via a HTTP PUT request, which is robust against standard SSRF patterns.
+**Prevention:** Always define `metadata_options { http_tokens = "required" }` and configure `root_block_device { encrypted = true }` within all EC2 resource definitions in our OpenTofu and Terraform templates to ensure security compliance and protect sensitive keys or data at rest.
