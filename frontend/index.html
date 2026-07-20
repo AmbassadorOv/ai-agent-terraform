@@ -75,6 +75,7 @@
             <div class="flex items-center space-x-4">
                 <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-stone-600">
                     <a href="#dashboard" class="hover:text-bronze-600 transition-colors">Dashboard</a>
+                    <a href="#p2p-cluster" class="hover:text-bronze-600 transition-colors font-semibold text-bronze-600">P2P Cluster</a>
                     <a href="#workflow" class="hover:text-bronze-600 transition-colors">Workflow</a>
                     <a href="#control-tower" class="hover:text-bronze-600 transition-colors">Control Tower</a>
                 </div>
@@ -160,6 +161,169 @@
                     <p class="text-xs text-stone-400 text-center mt-4">
                         Agents below 0.65 are automatically <strong>QUARANTINED</strong>.
                     </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- P2P CLUSTER CONNECTIVITY CONTROL -->
+        <section id="p2p-cluster" class="scroll-mt-20">
+            <div class="mb-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-3xl font-bold text-stone-900 flex items-center gap-2">
+                            <span>📡</span> P2P Cluster Connectivity & Command Center
+                        </h2>
+                        <p class="text-stone-500 mt-2 max-w-3xl">
+                            Offline multi-device P2P mesh network interface. Autonomously discover peers, perform latency checks, elect an Admiral node, and monitor agent allocation. <strong>No cloud or internet is required.</strong>
+                        </p>
+                    </div>
+                    <!-- Download Button -->
+                    <div class="flex-shrink-0">
+                        <a href="https://fire-pluga.s3.amazonaws.com/fire-pluga-cluster-v2.apk" target="_blank" class="inline-flex items-center gap-2 px-5 py-3 bg-stone-800 hover:bg-stone-900 text-white font-mono font-bold rounded-lg shadow-md transition-all border border-stone-700">
+                            <span>📲</span> Download fire-pluga-cluster-v2.apk
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Bypass Status Banner -->
+                <div class="bg-stone-900 text-stone-300 rounded-xl p-4 mt-6 flex flex-col md:flex-row items-center justify-between border-l-4 border-bronze-500 font-mono text-sm gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-green-500">●</span>
+                        <span><strong>RENDER BYPASS ENGAGED:</strong> Local P2P Cluster Simulator Active</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="bg-stone-800 px-2 py-1 rounded text-xs text-stone-400">Auth: RE-AUTHENTICATED</span>
+                        <span class="bg-stone-800 px-2 py-1 rounded text-xs text-stone-400">Workspace: fire-pluga-cluster</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Visual Map Node Topology -->
+                <div class="lg:col-span-7 bg-white p-6 rounded-xl shadow-lg border border-stone-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-stone-800 mb-4 border-b border-stone-100 pb-2">P2P Cluster Topological Map</h3>
+                        <p class="text-sm text-stone-500 mb-6">Visual representation of live peer connections and task routing inside the local mesh.</p>
+
+                        <!-- Topology Diagram Container -->
+                        <div class="bg-stone-50 border border-stone-200 rounded-xl p-6 min-h-[300px] flex flex-col justify-between relative overflow-hidden font-mono">
+                            <!-- Background Grid Lines -->
+                            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-size: 20px 20px; background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px);"></div>
+
+                            <!-- Top Row: Admiral Node -->
+                            <div class="flex justify-center z-10">
+                                <div class="bg-stone-900 border-2 border-bronze-500 text-white p-4 rounded-xl shadow-md w-60 text-center relative group">
+                                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-bronze-500 text-stone-950 font-bold px-2 py-0.5 rounded text-[10px] tracking-wider uppercase">Admiral Node</div>
+                                    <div class="font-bold text-sm">DEVICE-B (80GB)</div>
+                                    <div class="text-xs text-bronze-300 mt-1">Elected Node (Max SD)</div>
+                                    <div class="text-[10px] text-stone-400 mt-2 border-t border-stone-800 pt-2 flex justify-between">
+                                        <span>Status: ACTIVE</span>
+                                        <span>Agents: 5</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Connection Lines Label Row -->
+                            <div class="flex justify-between px-12 py-2 text-xs text-stone-500 font-bold">
+                                <div class="flex flex-col items-center ml-4">
+                                    <span>◄── 15ms (TLS) ──►</span>
+                                </div>
+                                <div class="flex flex-col items-center mr-4">
+                                    <span>◄── 12ms (TLS) ──►</span>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Row: Controller & Worker -->
+                            <div class="flex justify-between gap-4 z-10">
+                                <!-- Controller Node -->
+                                <div class="bg-stone-800 border border-stone-700 text-white p-4 rounded-xl shadow-md w-[45%] text-center relative">
+                                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-stone-700 text-white font-bold px-2 py-0.5 rounded text-[10px] tracking-wider uppercase">Controller</div>
+                                    <div class="font-bold text-sm">DEVICE-C (Tablet)</div>
+                                    <div class="text-xs text-stone-300 mt-1">User Control Node</div>
+                                    <div class="text-[10px] text-stone-400 mt-2 border-t border-stone-700 pt-2 flex justify-between">
+                                        <span>Status: ACTIVE</span>
+                                        <span>Agents: 1</span>
+                                    </div>
+                                </div>
+
+                                <!-- Worker Node -->
+                                <div class="bg-stone-800 border border-stone-700 text-white p-4 rounded-xl shadow-md w-[45%] text-center relative">
+                                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-stone-700 text-white font-bold px-2 py-0.5 rounded text-[10px] tracking-wider uppercase">CPU Worker</div>
+                                    <div class="font-bold text-sm">DEVICE-A (18GB)</div>
+                                    <div class="text-xs text-stone-300 mt-1">Worker Node</div>
+                                    <div class="text-[10px] text-stone-400 mt-2 border-t border-stone-700 pt-2 flex justify-between">
+                                        <span>Status: ACTIVE</span>
+                                        <span>Agents: 3</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Direct horizontal connection across bottom -->
+                            <div class="absolute bottom-10 left-[45%] right-[45%] flex justify-center text-[10px] text-stone-400 font-bold pointer-events-none">
+                                <span>22ms</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid for P2P -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                        <div class="bg-stone-50 border border-stone-200 p-3 rounded-lg text-center">
+                            <div class="text-stone-500 text-[10px] uppercase font-mono tracking-wider">peer_latency_ms_D1</div>
+                            <div class="text-lg font-bold font-mono text-stone-900 mt-1">12 ms</div>
+                            <div class="text-[10px] text-stone-400">80GB ◄► 18GB</div>
+                        </div>
+                        <div class="bg-stone-50 border border-stone-200 p-3 rounded-lg text-center">
+                            <div class="text-stone-500 text-[10px] uppercase font-mono tracking-wider">peer_latency_ms_D2</div>
+                            <div class="text-lg font-bold font-mono text-stone-900 mt-1">15 ms</div>
+                            <div class="text-[10px] text-stone-400">80GB ◄► Tablet</div>
+                        </div>
+                        <div class="bg-stone-50 border border-stone-200 p-3 rounded-lg text-center">
+                            <div class="text-stone-500 text-[10px] uppercase font-mono tracking-wider">Cluster Status</div>
+                            <div class="text-lg font-bold font-mono text-green-600 mt-1" id="p2p-cluster-status">CONNECTED</div>
+                            <div class="text-[10px] text-stone-400">3/3 Peers Online</div>
+                        </div>
+                        <div class="bg-stone-50 border border-stone-200 p-3 rounded-lg text-center">
+                            <div class="text-stone-500 text-[10px] uppercase font-mono tracking-wider">Last Sync</div>
+                            <div class="text-xs font-bold font-mono text-stone-900 mt-2 truncate" id="p2p-last-sync">--</div>
+                            <div class="text-[10px] text-stone-400">Heartbeat Interval: 5s</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Terminal Simulator -->
+                <div class="lg:col-span-5 bg-stone-950 text-stone-200 rounded-xl shadow-2xl overflow-hidden flex flex-col justify-between border border-stone-800">
+                    <!-- Terminal Header -->
+                    <div class="bg-stone-900 px-4 py-3 border-b border-stone-800 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                            <span class="text-xs font-mono font-bold text-stone-400 ml-2">fire-pluga-cluster-v2 console</span>
+                        </div>
+                        <button onclick="clearTerminal()" class="text-stone-500 hover:text-stone-300 text-xs font-mono">clear</button>
+                    </div>
+
+                    <!-- Terminal Logs Console -->
+                    <div class="p-4 font-mono text-xs overflow-y-auto h-[320px] space-y-2 flex flex-col" id="terminal-logs">
+                        <!-- Boot up sequence lines will be appended here -->
+                    </div>
+
+                    <!-- Terminal Quick Commands & Input -->
+                    <div class="bg-stone-900 p-4 border-t border-stone-800 space-y-3">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] text-stone-500 font-bold uppercase tracking-wider self-center">Quick commands:</span>
+                            <button onclick="execQuickCommand('!pluga cluster map')" class="bg-stone-800 hover:bg-stone-700 text-bronze-300 px-2 py-1 rounded text-[10px] font-mono transition-all">!pluga cluster map</button>
+                            <button onclick="execQuickCommand('!pluga ping')" class="bg-stone-800 hover:bg-stone-700 text-bronze-300 px-2 py-1 rounded text-[10px] font-mono transition-all">!pluga ping</button>
+                            <button onclick="execQuickCommand('!pluga cluster health')" class="bg-stone-800 hover:bg-stone-700 text-bronze-300 px-2 py-1 rounded text-[10px] font-mono transition-all">!pluga cluster health</button>
+                        </div>
+
+                        <!-- Input Bar -->
+                        <form onsubmit="handleTerminalSubmit(event)" class="flex gap-2">
+                            <span class="text-bronze-500 font-mono text-sm self-center">pluga$</span>
+                            <input type="text" id="terminal-input" placeholder="Type a pluga command..." autocomplete="off" class="bg-stone-950 border border-stone-800 focus:border-bronze-500 focus:outline-none px-3 py-2 rounded font-mono text-xs text-white flex-grow">
+                            <button type="submit" class="bg-bronze-500 hover:bg-bronze-600 text-stone-950 font-bold px-4 py-2 rounded text-xs font-mono transition-colors">Send</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </section>
