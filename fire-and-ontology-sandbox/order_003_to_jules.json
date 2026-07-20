@@ -1,0 +1,46 @@
+{
+  "repo_name": "fire-and-ontology-sandbox",
+  "status": "CONFIDENTIAL - UNDERGROUND",
+  "from": "חותמת 10 אגורות",
+  "to": "jules",
+  "objective": "בניית בלוקצ'יין מבוזר עם קריפטוגרפיה של סירוב ל-AIQuant ו-QuantConnect",
+  "milestones": [
+    {
+      "phase": "1. CORE_CRYPTO",
+      "tasks": [
+        "BLAKE3 Merkle Trees: החלפת SHA-256 לאימות שלמות בזמן אמת",
+        "PQC Layer: הטמעת Kyber ML-KEM + Dilithium ML-DSA היברידי עם Ed25519",
+        "Signature Aggregation: BLS12-381 לאיגוד חתימות סוכנים לקובץ אחד"
+      ]
+    },
+    {
+      "phase": "2. HARD_NULL_ENGINE",
+      "tasks": [
+        "Threshold Signatures: פרוטוקול FROST 3/5 - אין אישור בלי רוב",
+        "MPC Wallets: חלוקת מפתח סוכן ל-5 רסיסים. GG20. אין נקודת כשל יחידה",
+        "ZKP Range Proofs: Bulletproofs ל'יש לי 10 אגורות' בלי לחשוף יתרה"
+      ]
+    },
+    {
+      "phase": "3. PRIVACY_COMPUTE",
+      "tasks": [
+        "FHE Inference: Concrete-ML להרצת מודלי Qlib/XGBoost על דאטה מוצפן",
+        "zkML Pipeline: EZKL/JOLT-Halo2 להוכחת הרצת מודל בלי לחשוף משקולות",
+        "VDF Randomness: ליצירת אקראיות חסינת מניפולציה בבחירת מאמתים"
+      ]
+    },
+    {
+      "phase": "4. AI_ORCHESTRATOR",
+      "tasks": [
+        "Cryptographic Switcher: JSON דינמי לפי latency/gas/privacy",
+        "TEE Fallback: SGX כשצריך HFT <50ms",
+        "Optimistic zkML: הפקת הוכחות רק כשיש Challenge"
+      ]
+    }
+  ],
+  "integration_targets": [
+    "AIQuant.fun: חתימות BLS + MPC לארנקי סוכנים",
+    "QuantConnect: Concrete-ML למודלים קנייניים",
+    "Microsoft Qlib: zkML לאימות אלפא"
+  ]
+}
