@@ -4,6 +4,9 @@ services:
   agent-worker:
     image: wgi/edge-cpu-agent:latest
     container_name: wgi-auh-gov-infra-02-service
+    volumes:
+      - .:/app
+      - ./data:/data
     environment:
       - WGI_BRANCH=AUH-GOV
       - WGI_SUB_BRANCH=INFRA-02

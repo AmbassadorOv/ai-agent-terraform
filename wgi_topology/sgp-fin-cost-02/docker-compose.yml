@@ -4,6 +4,9 @@ services:
   agent-worker:
     image: wgi/edge-cpu-agent:latest
     container_name: wgi-sgp-fin-cost-02-service
+    volumes:
+      - .:/app
+      - ./data:/data
     environment:
       - WGI_BRANCH=SGP-FIN
       - WGI_SUB_BRANCH=COST-02

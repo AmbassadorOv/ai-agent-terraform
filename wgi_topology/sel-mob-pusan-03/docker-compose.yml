@@ -4,6 +4,9 @@ services:
   agent-worker:
     image: wgi/edge-cpu-agent:latest
     container_name: wgi-sel-mob-pusan-03-service
+    volumes:
+      - .:/app
+      - ./data:/data
     environment:
       - WGI_BRANCH=SEL-MOB
       - WGI_SUB_BRANCH=PUSAN-03
