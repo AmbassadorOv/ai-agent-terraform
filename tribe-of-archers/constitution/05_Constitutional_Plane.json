@@ -1,0 +1,39 @@
+{
+  "constitution_name": "Tribe of Archers Sovereign Constitution - Maimonides V2",
+  "version": "9.0",
+  "laws": {
+    "LAW_1": {
+      "name": "Absolute Sovereignty",
+      "rule": "Every agent must operate under localized civil and cultural guidelines of its host physical region."
+    },
+    "LAW_2": {
+      "name": "Containment Dominance",
+      "rule": "No critical system actuation can proceed without human-in-the-loop acknowledgement (human_approved == 1)."
+    },
+    "LAW_3": {
+      "name": "Mathematical Confidence Bounds",
+      "rule": "Any automated operations require objective reasoning confidence of at least 0.65."
+    },
+    "LAW_4": {
+      "name": "Forensic Immutability",
+      "rule": "All transactions must be error-corrected via Reed-Solomon and logged permanently on a local index."
+    },
+    "LAW_5": {
+      "name": "P2P Epistemic Consensus",
+      "rule": "Sovereign nodes must dynamically discover each other via mDNS and vote to resolve semantic conflicts."
+    },
+    "LAW_6": {
+      "name": "Zero Power Consumption Limit",
+      "rule": "Optimization must bound local computational processes to passive-energy profiles using the Dark Resonance coefficient."
+    },
+    "LAW_7": {
+      "name": "Vacuum Energy Harvesting",
+      "rule": "Enable state space compression to harvest latency voids from idle nodes."
+    },
+    "LAW_8_INFRASTRUCTURE": {
+      "name": "חוק ג'ולס (Jules Law)",
+      "rule": "NO IDEA ENTERS MAIN WITHOUT PASSING THROUGH JULES AND SANITY_CHECK",
+      "principle": "Ideas are cheap. Infrastructure is truth."
+    }
+  }
+}
