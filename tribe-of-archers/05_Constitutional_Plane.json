@@ -1,0 +1,36 @@
+{
+  "constitution_name": "Tribe of Archers Sovereign Constitution",
+  "version": "9.0",
+  "five_hard_laws": [
+    {
+      "id": 1,
+      "name": "Absolute Sovereignty",
+      "description": "Every agent must operate under localized civil and cultural guidelines of its host physical region."
+    },
+    {
+      "id": 2,
+      "name": "Containment Dominance",
+      "description": "No critical system actuation can proceed without human-in-the-loop acknowledgement (human_approved == 1)."
+    },
+    {
+      "id": 3,
+      "name": "Mathematical Confidence Bounds",
+      "description": "Any automated operations require objective reasoning confidence of at least 0.65."
+    },
+    {
+      "id": 4,
+      "name": "Forensic Immutability",
+      "description": "All transactions must be error-corrected via Reed-Solomon and logged permanently on a local index."
+    },
+    {
+      "id": 5,
+      "name": "P2P Epistemic Consensus",
+      "description": "Sovereign nodes must dynamically discover each other via mDNS and vote to resolve semantic conflicts."
+    }
+  ],
+  "lattice_spec": {
+    "total_dimensions": 126,
+    "confidence_floor_dimension": 65,
+    "cancellation_algebra": "Calculus of Cancellations V2"
+  }
+}
