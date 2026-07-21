@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "lattice_dimension": 126,
+  "target_tensor_dimension": 512,
+  "mapping_rules": {
+    "philosophical_axioms": {
+      "dimensions": [1, 2, 3, 4, 5, 6, 7],
+      "tensor_projection": "dense_linear",
+      "activation_threshold": 0.65
+    },
+    "linguistic_agents": {
+      "dimensions": [8, 9, 10, 11, 12, 13, 14],
+      "tensor_projection": "sparse_attention",
+      "weights": [0.15, 0.25, 0.35, 0.05, 0.05, 0.05, 0.10]
+    },
+    "lunar_chronology": {
+      "dimensions": [15, 16, 17, 18, 19, 20],
+      "tensor_projection": "temporal_decay",
+      "constants": {
+        "molad_constant_hours": 29.53059
+      }
+    }
+  }
+}
