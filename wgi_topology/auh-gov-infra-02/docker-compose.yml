@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  agent-worker:
+    image: wgi/edge-cpu-agent:latest
+    container_name: wgi-auh-gov-infra-02-service
+    environment:
+      - WGI_BRANCH=AUH-GOV
+      - WGI_SUB_BRANCH=INFRA-02
+      - WGI_ROLE=Infrastructure Sync
+      - WGI_AGENT_COUNT=10000
+      - NODE_ENV=production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    command: python3 agent_worker.py --branch AUH --sub INFRA-02
