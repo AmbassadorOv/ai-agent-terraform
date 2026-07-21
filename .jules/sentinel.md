@@ -1,0 +1,6 @@
+# Sentinel Security Journal
+
+## 2026-07-21 - EC2 Infrastructure Hardening and IMDSv2 Enforcement
+**Vulnerability:** Insecure default EC2 configurations with IMDSv1 enabled and unencrypted EBS root volumes, combined with HCL variable syntax errors (`value` instead of `default`). IMDSv1 is vulnerable to SSRF (Server-Side Request Forgery) attacks where an attacker can query local metadata to retrieve sensitive AWS IAM role credentials. Unencrypted root volumes pose a data exposure risk in the event of hardware or snapshot mishandling.
+**Learning:** Legacy and template configurations (such as Packer or bootstrap EC2 definitions) often default to permissive IMDSv1 or unencrypted volumes for compatibility, but these defaults are insecure in modern cloud deployments. Correcting HCL syntax ensures that validation systems pass smoothly without causing unexpected syntax errors.
+**Prevention:** Always explicitly define `metadata_options` with `http_tokens = "required"` for all EC2 resources (`aws_instance` and launch templates/configurations) to enforce IMDSv2. Enable `encrypted = true` on all root and EBS block devices. Use linting/validation tools to enforce proper HCL `default` assignment for variables.
