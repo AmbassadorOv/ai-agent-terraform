@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  agent-worker:
+    image: wgi/edge-cpu-agent:latest
+    container_name: wgi-tlv-hq-core-01-service
+    volumes:
+      - .:/app
+      - ./data:/data
+    environment:
+      - WGI_BRANCH=TLV-HQ
+      - WGI_SUB_BRANCH=CORE-01
+      - WGI_ROLE=Protocol Bridge
+      - WGI_AGENT_COUNT=5000
+      - NODE_ENV=production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    command: python3 agent_worker.py --branch TLV --sub CORE-01

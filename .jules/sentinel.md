@@ -1,0 +1,6 @@
+# Sentinel Security Journal
+
+## 2026-07-21 - Edge-CPU Decentralized Hardening and Zero-Trust Node Isolation
+**Vulnerability:** Insecure default node template configurations with unhardened local service accounts and unencrypted localized volumes, combined with HCL variable syntax errors (`value` instead of `default`). Standard default configurations can allow attackers to perform side-channel or lateral attacks on shared hardware, leading to metadata access or credential leakage. Additionally, invalid HCL syntax blocks automated CI/CD security pipelines from executing validation runs.
+**Learning:** For a Zero-NVIDIA, Edge-CPU sovereign topology (like WGI v1.0), relying on complex cloud-vendor layers creates dependency risk and performance overhead. Instead, we must enforce strict container-level sandboxing, local disk encryption, and CPU core limits to ensure robust, isolated, and low-footprint sovereign execution on local hardware.
+**Prevention:** Always enforce strict container resource constraints (such as `deploy.resources.limits` in Docker Compose) to protect against DoS. Ensure all local database volumes are encrypted at rest. Use local linting and HCL parser-compatible syntax (always use `default` for variable assignments) to ensure that automated security and syntax tests pass seamlessly.

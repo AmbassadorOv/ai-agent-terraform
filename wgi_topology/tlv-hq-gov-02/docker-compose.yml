@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  agent-worker:
+    image: wgi/edge-cpu-agent:latest
+    container_name: wgi-tlv-hq-gov-02-service
+    volumes:
+      - .:/app
+      - ./data:/data
+    environment:
+      - WGI_BRANCH=TLV-HQ
+      - WGI_SUB_BRANCH=GOV-02
+      - WGI_ROLE=Consortium & Audit
+      - WGI_AGENT_COUNT=5000
+      - NODE_ENV=production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    command: python3 agent_worker.py --branch TLV --sub GOV-02

@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  agent-worker:
+    image: wgi/edge-cpu-agent:latest
+    container_name: wgi-thalamus-core-global-service
+    volumes:
+      - .:/app
+      - ./data:/data
+    environment:
+      - WGI_BRANCH=THALAMUS-CORE
+      - WGI_SUB_BRANCH=GLOBAL
+      - WGI_ROLE=Thalamus Global Brain - Binary Routing
+      - WGI_AGENT_COUNT=0
+      - NODE_ENV=production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    command: python3 neuron_city_bridge.py

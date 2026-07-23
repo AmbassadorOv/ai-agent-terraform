@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  agent-worker:
+    image: wgi/edge-cpu-agent:latest
+    container_name: wgi-sgp-fin-cost-02-service
+    volumes:
+      - .:/app
+      - ./data:/data
+    environment:
+      - WGI_BRANCH=SGP-FIN
+      - WGI_SUB_BRANCH=COST-02
+      - WGI_ROLE=Zero Cost Balance
+      - WGI_AGENT_COUNT=10000
+      - NODE_ENV=production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    command: python3 agent_worker.py --branch SGP --sub COST-02
