@@ -1,3 +1,5 @@
-variable test_server_count {
-  value = 1 # how many test servers to run
+variable "test_server_count" {
+  type        = number
+  description = "The number of FastAPI test servers to launch"
+  default     = 1
 }
