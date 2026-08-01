@@ -1,0 +1,4 @@
+## 2026-06-30 - EC2 IMDSv2 and Encryption Hardening
+**Vulnerability:** Insecure Instance Metadata Service (IMDSv1) allowed metadata retrieval without session tokens, which could be exploited via SSRF (Server-Side Request Forgery) to steal IAM credentials or role assumptions. Additionally, root storage block devices were unencrypted by default, risking exposure of sensitive data at rest.
+**Learning:** Default AWS instance resource configurations in Terraform do not enforce high-security settings automatically. Explicit hardening is required to mandate session tokens (IMDSv2) and enforce volume encryption on all provisioned virtual machine resources.
+**Prevention:** Always enforce `http_tokens = "required"` under `metadata_options` and specify `encrypted = true` under `root_block_device` blocks for all `aws_instance` resources.
