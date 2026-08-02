@@ -150,7 +150,7 @@ resource "aws_lambda_function" "pre_sign_up" {
   count = var.max_levels
 
   function_name = "pre_sign_up_${count.index}"
-  runtime       = "nodejs14.x"
+  runtime       = "nodejs20.x"
 
   handler = "index.handler"
   source_code_hash = filebase64sha256("path_to_your_lambda_zip_${count.index}.zip")
@@ -252,7 +252,7 @@ resource "aws_lambda_function" "pre_sign_up" {
   count = var.level <= var.max_levels ? 1 : 0
 
   function_name = "pre_sign_up_${var.level}"
-  runtime       = "nodejs14.x"
+  runtime       = "nodejs20.x"
   handler       = "index.handler"
 
   # Assuming the source code is provided
