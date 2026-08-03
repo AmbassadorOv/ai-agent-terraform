@@ -1,0 +1,4 @@
+## 2026-07-01 - EC2 IMDSv2 and Root Storage Encryption Hardening
+**Vulnerability:** Unencrypted EBS root storage volumes and missing/optional IMDSv2 token enforcement on EC2 test instances. This leaves instances highly vulnerable to Server-Side Request Forgery (SSRF) metadata credential extraction and local disk data access.
+**Learning:** Developers setting up ephemeral, modular test instances (e.g., `fastapi_server_test_instance`) often omit security features under the assumption that test/dev environments are low risk, or because of boilerplate template neglect.
+**Prevention:** Always default to enforcing IMDSv2 metadata tokens (`http_tokens = "required"`) and enabling storage volume block encryption (`root_block_device { encrypted = true }`) in any newly provisioned AWS EC2 instances across both production and staging/test profiles.
