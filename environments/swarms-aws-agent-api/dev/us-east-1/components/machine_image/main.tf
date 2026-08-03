@@ -1,6 +1,6 @@
-#TASK:write terraform packer for ubuntu python fastapi server with custom git modules
+# TASK: write terraform packer for ubuntu python fastapi server with custom git modules
 
-#To create a Terraform configuration using Packer for an Ubuntu-based FastAPI server with custom Git modules, you'll need to follow a few steps. Below is a concise example of how to structure your Packer template and Terraform files.
+# To create a Terraform configuration using Packer for an Ubuntu-based FastAPI server with custom Git modules, you'll need to follow a few steps. Below is a concise example of how to structure your Packer template and Terraform files.
 
 provider "aws" {
   region = "us-east-1"
@@ -17,13 +17,23 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "fastapi_server_test_instance" {
-  count = var.test_server_count
+  count         = var.test_server_count
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
+
+  # Enforce IMDSv2 to prevent unauthorized access to instance metadata via SSRF vulnerabilities
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
+  # Enable encryption on the root block storage device to protect data confidentiality at rest
+  root_block_device {
+    encrypted = true
+  }
 
   # add in this user data
   tags = {
     Name = "FastAPI Server"
   }
 }
-
