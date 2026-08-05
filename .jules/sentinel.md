@@ -1,0 +1,4 @@
+## 2026-08-05 - Enforce Instance Metadata Service v2 (IMDSv2) and Root Block Storage Encryption
+**Vulnerability:** EC2 instances in the codebase were configured without enforcing IMDSv2 (metadata http_tokens required) and without enabling encryption on their root block storage volumes. This leaves instances vulnerable to SSRF credential extraction via the legacy IMDSv1 service and increases the risk of unauthorized physical storage access/leakage.
+**Learning:** Legacy configurations or templates for EC2 instances often neglect the modern security defaults of AWS, such as enforcing token-based metadata access (IMDSv2) and encrypting root storage block devices.
+**Prevention:** Always define `metadata_options { http_tokens = "required" }` and `root_block_device { encrypted = true }` in every Terraform/OpenTofu `aws_instance` declaration to maintain defense in depth and secure data at rest.
