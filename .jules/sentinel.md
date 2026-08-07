@@ -1,0 +1,4 @@
+## 2026-08-06 - Enforce IMDSv2 and encrypt root block storage for fastapi_server_test_instance
+**Vulnerability:** The fastapi_server_test_instance EC2 resource was configured with default metadata options (allowing IMDSv1) and unencrypted root block storage. This could allow an attacker exploiting Server-Side Request Forgery (SSRF) to retrieve AWS credentials or other sensitive instance metadata, and exposes root storage volumes to unencrypted physical access risks.
+**Learning:** Legacy configurations in modular infrastructures often omit secure defaults (like enforcing IMDSv2 tokens or enabling root volume block encryption) for quick prototyping. This creates low-hanging fruit vulnerabilities that can easily escalate.
+**Prevention:** Always explicitly define `metadata_options` with `http_tokens = "required"` and `root_block_device` with `encrypted = true` on all EC2 instance resource definitions across all modular infrastructure code.
