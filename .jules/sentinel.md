@@ -1,0 +1,4 @@
+## 2025-08-12 - EC2 Instance IMDSv2 and Root Storage Encryption Enforcement
+**Vulnerability:** EC2 instances deployed without mandatory IMDSv2 token enforcement are highly vulnerable to Server-Side Request Forgery (SSRF) and credential leakage. Additionally, unencrypted root storage volumes pose a risk of sensitive data exposure at rest.
+**Learning:** Legacy configurations often lack explicit security options for metadata services and volume encryption because default settings prioritize convenience. Enforcing IMDSv2 token requirements restricts metadata access to tokenized sessions, drastically reducing the blast radius of SSRF vulnerabilities.
+**Prevention:** Always define `metadata_options` with `http_tokens = "required"` and configure `root_block_device` with `encrypted = true` for all `aws_instance` resources.
