@@ -1,0 +1,4 @@
+## 2026-08-16 - EC2 IMDSv2 and EBS Root Volume Encryption Enforcement
+**Vulnerability:** EC2 instances configured in Terraform (`aws_instance.fastapi_server_test_instance`) lacked explicit mandatory IMDSv2 token enforcement (`http_tokens = "required"`) and root volume encryption (`encrypted = true`), exposing instances to potential SSRF credential exfiltration via IMDSv1 and unencrypted data at rest.
+**Learning:** Default Terraform `aws_instance` configurations without explicit `metadata_options` allow IMDSv1 requests, which can be leveraged during SSRF attacks to retrieve instance profile credentials. Additionally, root block devices default to unencrypted unless explicitly enabled.
+**Prevention:** Always define `metadata_options { http_tokens = "required" http_endpoint = "enabled" }` and `root_block_device { encrypted = true }` on all EC2 `aws_instance` definitions across all Terraform/OpenTofu component modules.
